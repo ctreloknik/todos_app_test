@@ -1,5 +1,9 @@
 import { ServerAPI } from "../server-api";
 import axios from 'axios';
+import {
+    onSuccessfullLogin,
+    onSuccessfullLogout
+} from '../Utils';
 
 const ACTION_TYPES = {
     USERNAME_CHANGE: 'USERNAME_CHANGE',
@@ -52,14 +56,17 @@ export const actions = {
                 }, {
                     withCredentials: true,
                     headers: {
-                        'Access-Control-Allow-Origin': true,
+                        'Access-Control-Allow-Origin': '*',
                         'Access-Control-Allow-Credentials': true
                     }
                 })
                 .then(res => {
                     console.log(res);
                     dispatch(actions.loginSuccess(res.data));
-                    callback();
+                    onSuccessfullLogin({
+                        ...res.data,
+                        login: data.login
+                    }, callback);
                 })
                 .catch(err => {
                     console.log('fail');
@@ -85,17 +92,31 @@ export const actions = {
             }
         };
     },
-    logout: () => {
-        return (dispatch) => {
-            axios
-                .post(`http://localhost:3000/api/v1/logout`)
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log('fail');
-                });
-        };
+    logout: (callback) => {
+        axios
+            .post(`http://localhost:3000/api/v1/logout`, null, {
+                withCredentials: true,
+                credentials: true,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': true,
+                    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS',
+                    'Content-Type': 'application/json'
+                    // Authorization: `Bearer ${cookie_value}`
+                }
+            })
+            .then(res => {
+                console.log(res);
+                onSuccessfullLogout(callback);
+
+                return {
+                    type: ACTION_TYPES.LOGOUT,
+                    payload: { undefined }
+                };
+            })
+            .catch(err => {
+                console.log('fail');
+            });
     }
 };
 
@@ -153,7 +174,9 @@ export default function todoAppReducer(state = initialInitState, action) {
             return {
                 ...state,
                 login: '',
-                password: ''
+                password: '',
+                name: '',
+                role: ''
             };
         }
         default: return state;

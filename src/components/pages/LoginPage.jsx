@@ -1,12 +1,14 @@
 import React from 'react';
 import {
     useHistory,
-    useLocation
+    useLocation,
+    Redirect
 } from 'react-router-dom';
 
 import { actions } from "../../redux/sm";
 import { connect } from "react-redux";
-import { FAKE_AUTH } from '../../Utils';
+
+import { isAuthenticated } from '../../Utils';
 
 import './LoginPage.scss';
 
@@ -33,26 +35,33 @@ class LoginPage extends React.Component {
     }
 
     render = () => {
-        return (
-            <div disabled={this.props.isLoading}>
-                <LoginFormSubmit onSubmit={this.onSubmit}>
-                    <input onChange={this.onUsernameChange}
-                        value={this.props.login ? this.props.login : ''}
-                        type='text'
-                        name='login'
-                        placeholder='username'
-                        required autoComplete='false' />
-                    <input onChange={this.onPasswordChange}
-                        value={this.props.password ? this.props.password : ''}
-                        type='password'
-                        name='password'
-                        placeholder='password'
-                        required autoComplete='false' />
-                    {/* <p>You must log in to view the page at {this.location.from.pathname}</p> */}
-                    <button disabled={!this.props.isValid}>Log in</button>
-                </LoginFormSubmit>
-            </div>
-        );
+        return isAuthenticated() ? (
+            <Redirect
+                to={{
+                    pathname: "/home",
+                    state: { from: { pathname: "/" } }
+                }}
+            />
+        ) : (
+                <div disabled={this.props.isLoading}>
+                    <LoginFormSubmit onSubmit={this.onSubmit}>
+                        <input onChange={this.onUsernameChange}
+                            value={this.props.login ? this.props.login : ''}
+                            type='text'
+                            name='login'
+                            placeholder='username'
+                            required autoComplete='false' />
+                        <input onChange={this.onPasswordChange}
+                            value={this.props.password ? this.props.password : ''}
+                            type='password'
+                            name='password'
+                            placeholder='password'
+                            required autoComplete='false' />
+                        {/* <p>You must log in to view the page at {this.location.from.pathname}</p> */}
+                        <button disabled={!this.props.isValid}>Log in</button>
+                    </LoginFormSubmit>
+                </div>
+            );
     }
 }
 
@@ -63,9 +72,7 @@ function LoginFormSubmit({ children, ...rest }) {
     let onSubmit = (event) => {
         const callback = () => {
             let { from } = location.state || { from: { pathname: "/" } };
-            FAKE_AUTH.authenticate(() => {
-                history.replace(from);
-            });
+            history.replace(from);
         }
 
         rest.onSubmit(callback);
@@ -96,7 +103,7 @@ const mapDispatchToProps = (dispatch) => {
         passwordChange: (pass) => {
             dispatch(actions.passwordChange(pass));
         },
-        
+
         loginAction: (data, callback) => {
             dispatch(actions.loginAction(data, callback));
         }

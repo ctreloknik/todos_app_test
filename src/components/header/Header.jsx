@@ -1,4 +1,4 @@
-import { MENU_ITEMS, FAKE_AUTH } from '../../Utils';
+import { MENU_ITEMS } from '../../Utils';
 
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
@@ -60,10 +60,7 @@ class Header extends React.Component {
 function SignOutBtn() {
     let history = useHistory();
     let onSignOut = () => {
-        FAKE_AUTH.signout(() => {
-            actions.logout();
-            history.push("/")
-        });
+        actions.logout(() => history.push("/"));
     }
 
     return (<Link to="#" className="menu-panel-item" onClick={onSignOut}>
@@ -73,15 +70,15 @@ function SignOutBtn() {
 
 const mapStateToProps = (state) => {
     return {
-        name: state.name,
-        role: state.role
+        name: state.name || localStorage.getItem('user'),
+        role: state.role || localStorage.getItem('role')
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        logout: () => {
-            dispatch(actions.logout());
+        logout: (callback) => {
+            dispatch(actions.logout(callback));
         }
     }
 };

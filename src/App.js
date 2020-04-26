@@ -3,17 +3,14 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect,
-  useHistory,
-  useLocation
 } from 'react-router-dom';
 import { Provider } from "react-redux";
 
 import NoMatch from './components/pages/NoMatch';
 import LoginPage from './components/pages/LoginPage';
 import MainView from './components/pages/MainView';
-import { FAKE_AUTH } from './Utils';
+import { isAuthenticated } from './Utils';
 
 import configureStore from "./redux/configureStore"
 
@@ -38,7 +35,7 @@ class App extends React.Component {
                 test
               </PrivateRoute>
               <Route path="*">
-                <NoMatch auth={FAKE_AUTH.isAuthenticated} />
+                <NoMatch auth={isAuthenticated()} />
               </Route>
             </Switch>
         </Router>
@@ -54,7 +51,7 @@ function PrivateRoute({ children, ...rest }) {
       render={({ location }) => {
         // console.log(location)
 
-        return FAKE_AUTH.isAuthenticated ? (
+        return isAuthenticated() ? (
           <div>
             <MainView />
             {children}
@@ -71,10 +68,6 @@ function PrivateRoute({ children, ...rest }) {
       }
     />
   );
-}
-
-function PublicPage() {
-  return <h3>Public</h3>;
 }
 
 function ProtectedPage() {

@@ -1,4 +1,4 @@
-const MENU_ITEMS = [{
+export const MENU_ITEMS = [{
     id: 'home',
     link: '/',
     text: 'Home'
@@ -8,23 +8,41 @@ const MENU_ITEMS = [{
     text: 'TODO'
 }]
 
-const FAKE_AUTH = {
+const LOCAL_AUTH = {
     isAuthenticated: false,
-    authenticate(cb) {
-        FAKE_AUTH.isAuthenticated = true;
-        setTimeout(cb, 100); // fake async
+    login: '',
+    name: '',
+    role: '',
+    authenticate(data) {
+        localStorage.setItem('user', data.name);
+        localStorage.setItem('role', data.role);
+
+        this.login = data.login;
+        this.name = data.name;
+        this.role = data.role;
+
+        console.log(LOCAL_AUTH);
+        LOCAL_AUTH.isAuthenticated = true;
     },
     signout(cb) {
-        FAKE_AUTH.isAuthenticated = false;
-        setTimeout(cb, 100);
+        localStorage.removeItem('user');
+        localStorage.removeItem('role');
+
+        this.login = this.name = this.role = '';
+        LOCAL_AUTH.isAuthenticated = false;
     }
 }
 
-function onSuccessfullLogin(data) {
-    this.userData = {
-        username: data.username,
-        userRole: data.role
-    }
+export function onSuccessfullLogin(data, callback) {
+    LOCAL_AUTH.authenticate(data);
+    callback();
 }
 
-export {MENU_ITEMS, FAKE_AUTH}
+export function onSuccessfullLogout(callback) {
+    LOCAL_AUTH.signout();
+    callback();
+}
+
+export function isAuthenticated() {
+    return !!localStorage.getItem('user');
+}

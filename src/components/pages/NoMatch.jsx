@@ -4,14 +4,14 @@ import {
     Redirect
 } from 'react-router-dom';
 
-import { FAKE_AUTH } from '../../Utils';
+import { isAuthenticated } from '../../Utils';
 
 function NoMatch({ children, ...rest }) {
     return (
         <Route
             {...rest}
             render={({ location }) =>
-                FAKE_AUTH.isAuthenticated ? (
+                isAuthenticated() ? (
                     <Redirect
                         to={{
                             pathname: "/home",
