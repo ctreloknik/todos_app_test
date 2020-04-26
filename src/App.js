@@ -1,26 +1,84 @@
 import React from 'react';
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation
+} from 'react-router-dom';
+import { Provider } from "react-redux";
+
+import NoMatch from './components/pages/NoMatch';
+import LoginPage from './components/pages/LoginPage';
+import MainView from './components/pages/MainView';
+import { FAKE_AUTH } from './Utils';
+
+import configureStore from "./redux/configureStore"
+
 import './App.css';
 
-function App() {
+const configuredStore = configureStore();
+const store = configuredStore.store;
+
+class App extends React.Component {
+  render = () => {
+    return (
+      <Provider store={store}>
+        <Router>
+            <Switch>
+              <Route path="/login">
+                <LoginPage />
+              </Route>
+              <PrivateRoute path="/home">
+                <ProtectedPage />
+              </PrivateRoute>
+              <PrivateRoute path="/test">
+                test
+              </PrivateRoute>
+              <Route path="*">
+                <NoMatch auth={FAKE_AUTH.isAuthenticated} />
+              </Route>
+            </Switch>
+        </Router>
+      </Provider>
+    );
+  }
+}
+
+function PrivateRoute({ children, ...rest }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Route
+      {...rest}
+      render={({ location }) => {
+        // console.log(location)
+
+        return FAKE_AUTH.isAuthenticated ? (
+          <div>
+            <MainView />
+            {children}
+          </div>
+        ) : (
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: { from: location }
+              }}
+            />
+          )
+      }
+      }
+    />
   );
+}
+
+function PublicPage() {
+  return <h3>Public</h3>;
+}
+
+function ProtectedPage() {
+  return <h3>Protected</h3>;
 }
 
 export default App;
