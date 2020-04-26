@@ -2,6 +2,9 @@ import { MENU_ITEMS, FAKE_AUTH } from '../../Utils';
 
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { actions } from "../../redux/sm";
+import { connect } from "react-redux";
+
 import './Header.scss';
 
 class MenuItem extends React.Component {
@@ -47,11 +50,9 @@ class Header extends React.Component {
         return (
             <header className="header">
                 {items}
-                <SignOutBtn/>
+                <SignOutBtn />
+                {this.props.name} && {this.props.role}
             </header>
-            // <div className="menu-panel">
-            //     {items}
-            // </div>
         )
     };
 }
@@ -59,7 +60,10 @@ class Header extends React.Component {
 function SignOutBtn() {
     let history = useHistory();
     let onSignOut = () => {
-        FAKE_AUTH.signout(() => history.push("/"));
+        FAKE_AUTH.signout(() => {
+            actions.logout();
+            history.push("/")
+        });
     }
 
     return (<Link to="#" className="menu-panel-item" onClick={onSignOut}>
@@ -67,5 +71,19 @@ function SignOutBtn() {
     </Link>)
 }
 
-export default Header;
-//<header className="header"></header>
+const mapStateToProps = (state) => {
+    return {
+        name: state.name,
+        role: state.role
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        logout: () => {
+            dispatch(actions.logout());
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

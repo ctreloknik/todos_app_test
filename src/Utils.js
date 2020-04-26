@@ -3,9 +3,9 @@ const MENU_ITEMS = [{
     link: '/',
     text: 'Home'
 }, {
-    id: 'test',
-    link: '/test',
-    text: 'Test'
+    id: 'todo',
+    link: '/todo',
+    text: 'TODO'
 }]
 
 const FAKE_AUTH = {

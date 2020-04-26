@@ -34,7 +34,7 @@ class App extends React.Component {
               <PrivateRoute path="/home">
                 <ProtectedPage />
               </PrivateRoute>
-              <PrivateRoute path="/test">
+              <PrivateRoute path="/todo">
                 test
               </PrivateRoute>
               <Route path="*">

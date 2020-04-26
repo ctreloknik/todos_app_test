@@ -13,63 +13,43 @@ import './LoginPage.scss';
 class LoginPage extends React.Component {
     constructor(props) {
         super();
-        this.state = {
-            username: '',
-            password: '',
-            isValid: false,
-            isLoading: false
-        }
     }
 
     onUsernameChange = (event) => {
         const value = event.target.value;
-        this.setState((state, props) => {
-            return {
-                username: value,
-                isValid: state.password && value
-            }
-        });
+        this.props.usernameChange(value)
     }
 
     onPasswordChange = (event) => {
         const value = event.target.value;
-        this.setState((state, props) => {
-            return {
-                password: value,
-                isValid: !!(state.username && value)
-            }
-        });
+        this.props.passwordChange(value);
     }
 
     onSubmit = (callback) => {
-        this.setState({
-            isLoading: true
-        })
-
         const data = {};
-        data.login = this.state.username;
-        data.password = this.state.password;
-        this.props.login(data, callback);
+        data.login = this.props.login;
+        data.password = this.props.password;
+        this.props.loginAction(data, callback);
     }
 
     render = () => {
         return (
-            <div disabled={this.state.isLoading}>
+            <div disabled={this.props.isLoading}>
                 <LoginFormSubmit onSubmit={this.onSubmit}>
                     <input onChange={this.onUsernameChange}
-                        value={this.state.username}
+                        value={this.props.login ? this.props.login : ''}
                         type='text'
-                        name='username'
+                        name='login'
                         placeholder='username'
                         required autoComplete='false' />
                     <input onChange={this.onPasswordChange}
-                        value={this.state.password}
+                        value={this.props.password ? this.props.password : ''}
                         type='password'
                         name='password'
                         placeholder='password'
                         required autoComplete='false' />
                     {/* <p>You must log in to view the page at {this.location.from.pathname}</p> */}
-                    <button disabled={!this.state.isValid}>Log in</button>
+                    <button disabled={!this.props.isValid}>Log in</button>
                 </LoginFormSubmit>
             </div>
         );
@@ -101,20 +81,24 @@ function LoginFormSubmit({ children, ...rest }) {
 
 const mapStateToProps = (state) => {
     return {
-        username: state,
-        password: state,
-        isLoading: state.isLoading
+        login: state.login,
+        password: state.password,
+        isLoading: state.isLoading,
+        isValid: state.isValid,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        login: (data, callback) => {
-            dispatch(actions.login(data, callback));
+        usernameChange: (login) => {
+            dispatch(actions.usernameChange(login));
         },
-
-        logout: () => {
-            dispatch(actions.logout());
+        passwordChange: (pass) => {
+            dispatch(actions.passwordChange(pass));
+        },
+        
+        loginAction: (data, callback) => {
+            dispatch(actions.loginAction(data, callback));
         }
     }
 };
