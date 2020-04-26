@@ -50,17 +50,17 @@ class Header extends React.Component {
         return (
             <header className="header">
                 {items}
-                <SignOutBtn />
+                <SignOutBtn logout={this.props.logout}/>
                 {this.props.name} && {this.props.role}
             </header>
         )
     };
 }
 
-function SignOutBtn() {
+function SignOutBtn({children, ...rest}) {
     let history = useHistory();
     let onSignOut = () => {
-        actions.logout(() => history.push("/"));
+        rest.logout(() => history.push("/"));
     }
 
     return (<Link to="#" className="menu-panel-item" onClick={onSignOut}>

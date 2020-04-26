@@ -5,6 +5,15 @@ import {
     onSuccessfullLogout
 } from '../Utils';
 
+import Axios, { AxiosInstance } from 'axios';
+import axiosCookieJarSupport from 'axios-cookiejar-support';
+import { CookieJar } from 'tough-cookie';
+
+// const axiosCookieJarSupport = require('axios-cookiejar-support').default;
+// const tough = require('tough-cookie');
+axiosCookieJarSupport(axios);
+const cookieJar = new CookieJar();
+
 const ACTION_TYPES = {
     USERNAME_CHANGE: 'USERNAME_CHANGE',
     PASSWORD_CHANGE: 'PASSWORD_CHANGE',
@@ -57,32 +66,49 @@ export const actions = {
                     withCredentials: true,
                     headers: {
                         'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Credentials': true
+                        'Access-Control-Allow-Credentials': true,
+                        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
                     }
                 })
                 .then(res => {
                     console.log(res);
-                    dispatch(actions.loginSuccess(res.data));
+                    //dispatch(actions.loginSuccess(res.data));
                     onSuccessfullLogin({
                         ...res.data,
                         login: data.login
                     }, callback);
+
+                    return {
+                        type: ACTION_TYPES.LOGIN,
+                        payload: {
+                            ...data,
+                            isLoading: false
+                        }
+                    };
                 })
                 .catch(err => {
                     console.log('fail');
+
+                    // return {
+                    //     type: ACTION_TYPES.LOGIN,
+                    //     payload: {
+                    //         //...data,
+                    //         isLoading: false
+                    //     }
+                    // };
                     dispatch(actions.loginFail(err.message));
                 });
         };
     },
-    loginSuccess: (data) => {
-        return {
-            type: ACTION_TYPES.LOGIN_SUCCESS,
-            payload: {
-                ...data,
-                isLoading: false
-            }
-        };
-    },
+    // loginSuccess: (data) => {
+    //     return {
+    //         type: ACTION_TYPES.LOGIN_SUCCESS,
+    //         payload: {
+    //             ...data,
+    //             isLoading: false
+    //         }
+    //     };
+    // },
     loginFail: (data) => {
         return {
             type: ACTION_TYPES.LOGIN_FAIL,
@@ -93,30 +119,35 @@ export const actions = {
         };
     },
     logout: (callback) => {
-        axios
-            .post(`http://localhost:3000/api/v1/logout`, null, {
-                withCredentials: true,
-                credentials: true,
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Credentials': true,
-                    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS',
-                    'Content-Type': 'application/json'
-                    // Authorization: `Bearer ${cookie_value}`
-                }
-            })
-            .then(res => {
-                console.log(res);
-                onSuccessfullLogout(callback);
-
-                return {
-                    type: ACTION_TYPES.LOGOUT,
-                    payload: { undefined }
-                };
-            })
-            .catch(err => {
-                console.log('fail');
-            });
+        return (dispatch) => {
+            axios
+                .post(`http://localhost:3000/api/v1/logout`, '', {
+                    withCredentials: true,
+                    credentials: 'include',
+                    //credentials: "same-origin",
+                    jar: cookieJar,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Credentials': true,
+                        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+                        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS'
+                    }
+                })
+                .then(res => {
+                    console.log(res);
+                    dispatch(actions.logoutSuccess())
+                    onSuccessfullLogout(callback);
+                })
+                .catch(err => {
+                    console.log('fail');
+                });
+        }
+    },
+    logoutSuccess: () => {
+        return {
+            type: ACTION_TYPES.LOGOUT,
+            payload: { undefined }
+        };
     }
 };
 
@@ -154,8 +185,9 @@ export default function todoAppReducer(state = initialInitState, action) {
 
         case ACTION_TYPES.LOGIN: {
             return {
-                login: '',
-                password: ''
+                isLoading: false,
+                login: state.login,
+                password: state.password
             };
         }
         case ACTION_TYPES.LOGIN_SUCCESS: {
@@ -166,17 +198,17 @@ export default function todoAppReducer(state = initialInitState, action) {
         }
         case ACTION_TYPES.LOGIN_FAIL: {
             return {
-                ...state,
+                //...state,
                 isLoading: false
             };
         }
         case ACTION_TYPES.LOGOUT: {
             return {
-                ...state,
                 login: '',
                 password: '',
                 name: '',
-                role: ''
+                role: '',
+                isLoading: false
             };
         }
         default: return state;
