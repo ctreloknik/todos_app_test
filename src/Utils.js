@@ -9,7 +9,6 @@ export const MENU_ITEMS = [{
 }]
 
 const LOCAL_AUTH = {
-    isAuthenticated: false,
     login: '',
     name: '',
     role: '',
@@ -22,27 +21,36 @@ const LOCAL_AUTH = {
         this.role = data.role;
 
         console.log(LOCAL_AUTH);
-        LOCAL_AUTH.isAuthenticated = true;
     },
     signout(cb) {
         localStorage.removeItem('user');
         localStorage.removeItem('role');
 
         this.login = this.name = this.role = '';
-        LOCAL_AUTH.isAuthenticated = false;
+    },
+    isAuthenticated() {
+        return !!localStorage.getItem('user');
     }
 }
 
 export function onSuccessfullLogin(data, callback) {
     LOCAL_AUTH.authenticate(data);
-    callback();
+    if (callback) {
+        callback();
+    };
 }
 
 export function onSuccessfullLogout(callback) {
     LOCAL_AUTH.signout();
-    callback();
+    if (callback) {
+        callback();
+    };
+}
+
+export function doLogout() {
+    LOCAL_AUTH.signout();
 }
 
 export function isAuthenticated() {
-    return !!localStorage.getItem('user');
+    return LOCAL_AUTH.isAuthenticated();
 }

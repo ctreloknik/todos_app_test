@@ -1,9 +1,9 @@
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
-import calculatorReducer from "./sm";
+import todoAppReducer from "./sm";
 
 const configureStore = () => {
-    const store = createStore(calculatorReducer, applyMiddleware(thunk));
+    const store = createStore(todoAppReducer, applyMiddleware(thunk));
     return { store };
 };
 

@@ -1,17 +1,24 @@
 import React from 'react';
-// import {
-//     Route,
-//     Redirect
-// } from 'react-router-dom';
 import Header from '../header/Header';
-
-// import { FAKE_AUTH } from '../../Utils';
+import { useHistory } from 'react-router-dom';
 
 function MainView({ children, ...rest }) {
+    let history = useHistory();
+    let onFail = () => {
+        history.push("/");
+    }
+
+    let adaptedChild = null;
+    if (typeof children === 'string') {
+        adaptedChild = <div>{children}</div>
+    } else {
+        adaptedChild = React.cloneElement(children, { onFail });
+    }
+
     return (
         <div>
-            <Header/>
-            {children}
+            <Header />
+            {adaptedChild}
         </div>
     );
 }
