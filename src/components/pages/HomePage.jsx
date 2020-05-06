@@ -9,10 +9,6 @@ class HomePage extends React.Component {
     this.props.getUserInfo(this.props.onFail);
   }
 
-  // componentDidMount = () => {
-    // this.props.getUserInfo(this.props.onFail);
-  // }
-
   render = () => {
     return (
       <div>

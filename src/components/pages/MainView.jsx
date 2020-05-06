@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 function MainView({ children, ...rest }) {
     let history = useHistory();
     let onFail = () => {
-        history.push("/");
+        history.push("/login");
     }
 
     let adaptedChild = null;

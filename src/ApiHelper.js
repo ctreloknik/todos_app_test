@@ -1,9 +1,18 @@
 import axios from 'axios';
-import axiosCookieJarSupport from 'axios-cookiejar-support';
-import { CookieJar } from 'tough-cookie';
 
-axiosCookieJarSupport(axios);
-const cookieJar = new CookieJar();
+const api = axios.create({
+    baseURL: `http://localhost:3000/api/v1/`,
+    timeout: 3600,
+    withCredentials: true
+    // headers: {
+    //     'accept': 'application/json',
+    //     'Access-Control-Allow-Origin': '*',
+    //     'Access-Control-Allow-Credentials': true,
+    //     "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+    //     'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS'
+    // }
+});
+api.defaults.withCredentials = true;
 
 const ApiHelper = {
     login(data) {
@@ -22,20 +31,9 @@ const ApiHelper = {
 export default ApiHelper;
 
 function doRequest(url, method, data) {
-    return axios({
+    return api({
         method: method,
-        baseURL: `http://localhost:3000/api/v1/`,
         url: url,
-        withCredentials: true,
-        // credentials: 'include',
-        // jar: cookieJar,
-        headers: {
-            'accept': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true,
-            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS'
-        },
         data: data
     })
 }

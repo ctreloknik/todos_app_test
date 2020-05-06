@@ -6,31 +6,32 @@ import {
 } from '../Utils';
 
 import ApiHelper from '../ApiHelper';
-
-// import Axios, { AxiosInstance } from 'axios';
-// import axiosCookieJarSupport from 'axios-cookiejar-support';
-// import { CookieJar } from 'tough-cookie';
-
-// axiosCookieJarSupport(axios);
-// const cookieJar = new CookieJar();
-
-const ACTION_TYPES = {
-    USERNAME_CHANGE: 'USERNAME_CHANGE',
-    PASSWORD_CHANGE: 'PASSWORD_CHANGE',
-
-    LOADING_LOGIN_FORM: 'LOADING_LOGIN_FORM',
-
-    LOGIN: 'LOGIN',
-    LOGIN_SUCCESS: 'LOGIN_SUCCESS',
-    LOGIN_FAIL: 'LOGIN_FAIL',
-
-    LOGOUT: 'LOGOUT',
-
-    GET_ABOUT_ME: 'GET_ABOUT_ME',
-    GET_ABOUT_ME_SUCCESS: 'GET_ABOUT_ME_SUCCESS'
-};
+import { ACTION_TYPES } from './ActionTypesConst';
 
 export const actions = {
+    checkAutentification: () => {
+        return (dispatch) => {
+            dispatch(actions.checkAutentificationProcess(false));
+
+            ApiHelper.getInfoAboutMe()
+                .then(res => {
+                    dispatch(actions.checkAutentificationProcess(true, true));
+                })
+                .catch(err => {
+                    dispatch(actions.checkAutentificationProcess(true, false));
+                    doLogout();
+                });
+        }
+    },
+
+    checkAutentificationProcess: (isAppLoaded, status) => {
+        return {
+            type: ACTION_TYPES.CHECK_AUTENTIFICATION_PROCESS,
+            isAppLoaded: isAppLoaded,
+            status: status
+        }
+    },
+
     usernameChange: (login) => {
         return {
             type: ACTION_TYPES.USERNAME_CHANGE,
@@ -53,12 +54,6 @@ export const actions = {
 
     loginAction: (data, callback) => {
         return (dispatch) => {
-            // axios.defaults.withCredentials = true;
-            // axios.defaults.headers = {
-            //     'Access-Control-Allow-Origin': true,
-            //     'Access-Control-Allow-Credentials': true
-            // };
-
             dispatch(actions.isLoading());
 
             ApiHelper.login({
@@ -150,6 +145,12 @@ export const initialInitState = {
 
 export default function todoAppReducer(state = initialInitState, action) {
     switch (action.type) {
+        case ACTION_TYPES.CHECK_AUTENTIFICATION_PROCESS: {
+            return {
+                isAppLoaded: action.isAppLoaded
+            }
+        }
+
         case ACTION_TYPES.USERNAME_CHANGE: {
             return {
                 ...state,

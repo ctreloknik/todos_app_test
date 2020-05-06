@@ -35,18 +35,15 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
-          {!isAuthenticated()} ? (
           <Route exact path="/login">
             <LoginPage />
           </Route>
-          ) : (
           <PrivateRoute path="/home">
             <HomePage />
           </PrivateRoute>
           <PrivateRoute path="/todo">
             test
           </PrivateRoute>
-          )
           <Route path="*">
             <NoMatch auth={isAuthenticated()} />
           </Route>
