@@ -15,6 +15,7 @@ export const actions = {
 
             ApiHelper.getInfoAboutMe()
                 .then(res => {
+                    onSuccessfullLogin({...res.data});
                     dispatch(actions.checkAutentificationProcess(true, true));
                 })
                 .catch(err => {
@@ -45,7 +46,7 @@ export const actions = {
         };
     },
 
-    isLoading: () => {
+    loadingOnLogin: () => {
         return {
             type: ACTION_TYPES.LOADING_LOGIN_FORM,
             isLoading: true
@@ -54,7 +55,7 @@ export const actions = {
 
     loginAction: (data, callback) => {
         return (dispatch) => {
-            dispatch(actions.isLoading());
+            dispatch(actions.loadingOnLogin());
 
             ApiHelper.login({
                 login: data.login,
@@ -87,7 +88,8 @@ export const actions = {
             type: ACTION_TYPES.LOGIN_FAIL,
             payload: {
                 ...data,
-                isLoading: false
+                isLoading: false,
+                isValid: true
             }
         };
     },
@@ -113,19 +115,30 @@ export const actions = {
 
     getUserInfo: (callback) => {
         return (dispatch) => {
+            dispatch(actions.getUserInfoLoadingProcess(true));
+
             ApiHelper.getInfoAboutMe()
                 .then(res => {
                     console.log(res);
-                    dispatch(actions.getUserInfoSuccess(res.data));
+                    dispatch(actions.getUserInfoSuccess({ ...res.data, isLoading: false }));
                 })
                 .catch(err => {
                     if (err.response && err.response.status === 401) {
                         doLogout();
+                        dispatch(actions.getUserInfoLoadingProcess(false));
                         callback();
                     }
                     console.log('fail');
                 });
         }
+    },
+    getUserInfoLoadingProcess: (isLoading) => {
+        return {
+            type: ACTION_TYPES.GET_ABOUT_ME_SUCCESS,
+            payload: {
+                isLoading: isLoading
+            }
+        };
     },
     getUserInfoSuccess: (data) => {
         return {
@@ -173,13 +186,13 @@ export default function todoAppReducer(state = initialInitState, action) {
             }
         }
 
-        case ACTION_TYPES.LOGIN: {
-            return {
-                isLoading: false,
-                login: state.login,
-                password: state.password
-            };
-        }
+        // case ACTION_TYPES.LOGIN: {
+        //     return {
+        //         isLoading: false,
+        //         login: state.login,
+        //         password: state.password
+        //     };
+        // }
         case ACTION_TYPES.LOGIN_SUCCESS: {
             return {
                 // name: action.payload.name,
@@ -190,29 +203,31 @@ export default function todoAppReducer(state = initialInitState, action) {
             return {
                 login: state.login,
                 password: state.password,
-                isLoading: false,
-                isValid: true
+                isLoading: action.payload.isLoading,
+                isValid: action.payload.isValid
             };
         }
         case ACTION_TYPES.LOGOUT: {
             return {
-                login: '',
-                password: '',
-                name: '',
-                role: '',
-                isLoading: false
+                ...state
+                // login: '',
+                // password: '',
+                // name: '',
+                // role: '',
+                // isLoading: false
             };
         }
-        case ACTION_TYPES.GET_ABOUT_ME: {
-            return {
-                name: action.payload.name,
-                role: action.payload.role
-            };
-        }
+        // case ACTION_TYPES.GET_ABOUT_ME: {
+        //     return {
+        //         name: action.payload.name,
+        //         role: action.payload.role
+        //     };
+        // }
         case ACTION_TYPES.GET_ABOUT_ME_SUCCESS: {
             return {
                 name: action.payload.name,
-                role: action.payload.role
+                role: action.payload.role,
+                isLoading: action.payload.isLoading
             };
         }
         default: return state;
