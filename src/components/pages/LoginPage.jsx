@@ -43,22 +43,25 @@ class LoginPage extends React.Component {
                 }}
             />
         ) : (
-                <div disabled={this.props.isLoading}>
+                <div className='login-form-wrapper' disabled={this.props.isLoading}>
                     <LoginFormSubmit onSubmit={this.onSubmit}>
-                        <input onChange={this.onUsernameChange}
-                            value={this.props.login ? this.props.login : ''}
-                            type='text'
-                            name='login'
-                            placeholder='username'
-                            required autoComplete='false' />
-                        <input onChange={this.onPasswordChange}
-                            value={this.props.password ? this.props.password : ''}
-                            type='password'
-                            name='password'
-                            placeholder='password'
-                            required autoComplete='false' />
-                        {/* <p>You must log in to view the page at {this.location.from.pathname}</p> */}
-                        <button disabled={!this.props.isValid}>Log in</button>
+                        <div>
+                            <input onChange={this.onUsernameChange}
+                                value={this.props.login ? this.props.login : ''}
+                                type='text'
+                                name='login'
+                                className='login-input-field'
+                                placeholder='Username'
+                                required autoComplete='false' />
+                            <input onChange={this.onPasswordChange}
+                                value={this.props.password ? this.props.password : ''}
+                                type='password'
+                                name='password'
+                                className='login-input-field'
+                                placeholder='Password'
+                                required autoComplete='false' />
+                            <button className='login-submit-btn' disabled={!this.props.isValid}>Log in</button>
+                        </div>
                     </LoginFormSubmit>
                 </div>
             );
@@ -80,7 +83,7 @@ function LoginFormSubmit({ children, ...rest }) {
     };
 
     return (
-        <form className='form' onSubmit={onSubmit} >
+        <form className='login-form' onSubmit={onSubmit} >
             {children}
         </form>
     )
