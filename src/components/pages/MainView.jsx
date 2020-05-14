@@ -1,24 +1,16 @@
 import React from 'react';
 import Header from '../header/Header';
-import { useHistory } from 'react-router-dom';
+
+import { SecurityCfgCheck } from '../../Utils';
 
 function MainView({ children, ...rest }) {
-    let history = useHistory();
-    let onFail = () => {
-        history.push("/login");
-    }
-
-    let adaptedChild = null;
-    if (typeof children === 'string') {
-        adaptedChild = <div>{children}</div>
-    } else {
-        adaptedChild = React.cloneElement(children, { onFail });
-    }
+    const childrenComponent = SecurityCfgCheck.isPageEnabled(rest.pageName) ? 
+        children : 'Страница недоступна';
 
     return (
         <div>
             <Header />
-            {adaptedChild}
+            {childrenComponent}
         </div>
     );
 }

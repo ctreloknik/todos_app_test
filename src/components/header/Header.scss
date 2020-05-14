@@ -5,6 +5,8 @@
 }
 
 .menu-panel-item {
+    margin-left: 3px;
+    margin-right: 3px;
     text-align: center;
     width: calc(100% - 10px);
     height: 30px;
@@ -20,6 +22,8 @@
 }
 
 .menu-panel-item-selected {
+    margin-left: 6px;
+    margin-right: 6px;
     background-color: rgb(120, 130, 250);
 }
 

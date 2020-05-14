@@ -1,13 +1,14 @@
 import React from 'react';
 import LoadingElement from '../common/LoadingElement';
-import { actions } from "../../redux/sm";
+
+import { actions } from "../../redux/actions";
 import { connect } from "react-redux";
 
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.props.getUserInfo(this.props.onFail);
+    this.props.getUserInfo();
   }
 
   render = () => {
@@ -30,8 +31,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUserInfo: (callback) => {
-      dispatch(actions.getUserInfo(callback));
+    getUserInfo: () => {
+      dispatch(actions.getUserInfo());
     }
   }
 };

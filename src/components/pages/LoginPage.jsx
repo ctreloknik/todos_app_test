@@ -5,7 +5,7 @@ import {
     Redirect
 } from 'react-router-dom';
 
-import { actions } from "../../redux/sm";
+import { actions } from "../../redux/actions";
 import { connect } from "react-redux";
 
 import { isAuthenticated } from '../../Utils';
@@ -14,7 +14,10 @@ import './LoginPage.scss';
 
 class LoginPage extends React.Component {
     constructor(props) {
-        super();
+        super(props);
+
+        this.isLoginEdited = false;
+        this.isPassEdited = false;
     }
 
     onUsernameChange = (event) => {
@@ -35,6 +38,13 @@ class LoginPage extends React.Component {
     }
 
     render = () => {
+        if (!this.isLoginEdited && this.props.login) {
+            this.isLoginEdited = true;
+        }
+        if (!this.isPassEdited && this.props.password) {
+            this.isPassEdited = true;
+        }
+
         return isAuthenticated() ? (
             <Redirect
                 to={{
@@ -63,6 +73,15 @@ class LoginPage extends React.Component {
                             <button className='login-submit-btn' disabled={!this.props.isValid}>Log in</button>
                         </div>
                     </LoginFormSubmit>
+                    <div>
+                        {!this.isLoginEdited || !(this.isLoginEdited && !this.props.login) ? null : 'Введите логин'}
+                    </div>
+                    <div>
+                        {!this.isPassEdited || !(this.isPassEdited && !this.props.password) ? null : 'Введите пароль'}
+                    </div>
+                    <div>
+                        {this.props.errorText}
+                    </div>
                 </div>
             );
     }
@@ -91,10 +110,11 @@ function LoginFormSubmit({ children, ...rest }) {
 
 const mapStateToProps = (state) => {
     return {
-        login: state.login,
-        password: state.password,
+        login: state.login ? state.login : '',
+        password: state.password ? state.password : '',
         isLoading: state.isLoading,
         isValid: state.isValid,
+        errorText: state.errorText || ''
     };
 };
 

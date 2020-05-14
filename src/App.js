@@ -15,22 +15,6 @@ import { isAuthenticated } from './Utils';
 import './App.css';
 
 class App extends React.Component {
-  // constructor(props) {
-  //   super(props);
-
-  // ApiHelper.getInfoAboutMe()
-  //   .then((data) => {
-  //     console.log('on');
-  //     onSuccessfullLogin(data);
-  //     useHistory().replace('/home');
-  //   }).catch((err) => {
-  //     if (err.response && err.response.status === 401) {
-  //       doLogout();
-  //       useHistory().replace('/login');
-  //     }
-  //   });
-  // }
-
   render = () => {
     return (
       <Router>
@@ -38,10 +22,13 @@ class App extends React.Component {
           <Route exact path="/login">
             <LoginPage />
           </Route>
-          <PrivateRoute path="/home">
+          <PrivateRoute path="/home" pageName='HOME'>
             <HomePage />
           </PrivateRoute>
-          <PrivateRoute path="/todo">
+          <PrivateRoute path="/users" pageName='USERS'>
+            users
+          </PrivateRoute>
+          <PrivateRoute path="/todo" pageName='TODO'>
             test
           </PrivateRoute>
           <Route path="*">
@@ -62,7 +49,7 @@ function PrivateRoute({ children, ...rest }) {
 
         return isAuthenticated() ? (
           <div>
-            <MainView>
+            <MainView pageName={rest.pageName}>
               {children}
             </MainView>
           </div>

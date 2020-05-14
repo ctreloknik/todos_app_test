@@ -3,6 +3,11 @@ export const MENU_ITEMS = [{
     link: '/',
     text: 'Home'
 }, {
+    id: 'users',
+    link: '/users',
+    text: 'Users',
+    hiddenFor: ['user']
+}, {
     id: 'todo',
     link: '/todo',
     text: 'TODO'
@@ -30,6 +35,21 @@ const LOCAL_AUTH = {
     },
     isAuthenticated() {
         return !!localStorage.getItem('user');
+    }
+}
+
+const SecurityCfg = {
+    PAGES: {
+        HOME: ['admin', 'user'],
+        USERS: ['admin'],
+        TODO: ['admin', 'user']
+    }
+}
+
+export const SecurityCfgCheck = {
+    isPageEnabled(page, role) {
+        const checkingRole = role || LOCAL_AUTH.role;
+        return SecurityCfg.PAGES[page].includes(checkingRole);
     }
 }
 

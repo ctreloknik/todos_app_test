@@ -2,7 +2,7 @@ import { MENU_ITEMS } from '../../Utils';
 
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { actions } from "../../redux/sm";
+import { actions } from "../../redux/actions";
 import { connect } from "react-redux";
 
 import './Header.scss';
@@ -12,14 +12,14 @@ class MenuItem extends React.Component {
         let classItem = 'menu-panel-item';
         let classItemSelected = ' menu-panel-item-selected';
 
-        return (
+        return isMenuItemVisible(this.props.item, this.props.securityCfg) ? (
             <Link
                 className={this.props.selected ? classItem + classItemSelected : classItem}
                 to={this.props.item.link}
                 onClick={(e) => this.props.itemClick(this.props.item.id)}
             >{this.props.item.text}
             </Link>
-        )
+        ) : null
     };
 }
 
@@ -40,10 +40,13 @@ class Header extends React.Component {
     }
 
     render = () => {
+        const securityCfg = this.props.role;
+
         const items = MENU_ITEMS.map((item) => <MenuItem
             itemClick={this.onMenuItemClick}
             key={item.link}
             item={item}
+            securityCfg={securityCfg}
             selected={this.state.selectedId === item.id}>
         </MenuItem>)
 
@@ -66,6 +69,14 @@ function SignOutBtn({ children, ...rest }) {
     return (<Link to="#" className="menu-panel-item" onClick={onSignOut}>
         Sign out
     </Link>)
+}
+
+function isMenuItemVisible(item, role) {
+    if (item.hiddenFor && item.hiddenFor.includes(role)) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 const mapStateToProps = (state) => {
