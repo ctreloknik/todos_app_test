@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { doLogout } from './Utils';
+import { doLogout, isAuthenticated } from './Utils';
 
 const api = axios.create({
     baseURL: `http://localhost:3000/api/v1/`,
@@ -19,10 +19,10 @@ api.interceptors.response.use(function (response) {
     console.log('200');
     return response;
 }, function (error) {
-    if (401 === error.response.status) {
+    if (isAuthenticated() && (401 === error.response.status)) {
         console.log('401');
+        doLogout();
         if (window.location.pathname !== '/login') {
-            doLogout();
             window.history.replaceState({}, null, '/login');
             document.location.reload();
         }
@@ -42,7 +42,31 @@ const ApiHelper = {
 
     getInfoAboutMe() {
         return doRequest('me', 'GET');
-    }
+    },
+
+    getAllUsers() {
+        return doRequest('users', 'GET');
+    },
+
+    getAllTodos() {
+        return doRequest('todos', 'GET');
+    },
+
+    createTodo(data) {
+        return doRequest('todos', 'POST', data);
+    },
+
+    getTodo(id) {
+        return doRequest('todos/'+id, 'GET');
+    },
+
+    updateTodo(data) {
+        return doRequest('todos/'+data.id, 'PUT', data);
+    },
+
+    deleteTodo(id) {
+        return doRequest('todos/'+id, 'DELETE');
+    },
 }
 
 export default ApiHelper;
