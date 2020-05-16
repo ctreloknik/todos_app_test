@@ -14,7 +14,7 @@ export const actions = {
 
             ApiHelper.getInfoAboutMe()
                 .then(res => {
-                    onSuccessfullLogin({...res.data});
+                    onSuccessfullLogin({ ...res.data });
                     dispatch(actions.checkAutentificationProcess(true, true));
                 })
                 .catch(err => {
@@ -75,6 +75,7 @@ export const actions = {
                 });
         };
     },
+
     loginSuccess: (data) => {
         return {
             type: ACTION_TYPES.LOGIN_SUCCESS,
@@ -114,7 +115,7 @@ export const actions = {
         };
     },
 
-    getUserInfo: (callback) => {
+    getUserInfo: () => {
         return (dispatch) => {
             dispatch(actions.getUserInfoLoadingProcess(true));
 
@@ -124,18 +125,14 @@ export const actions = {
                     dispatch(actions.getUserInfoSuccess({ ...res.data, isLoading: false }));
                 })
                 .catch(err => {
-                    if (err.response && err.response.status === 401) {
-                        doLogout();
-                        dispatch(actions.getUserInfoLoadingProcess(false));
-                        callback();
-                    }
+                    dispatch(actions.getUserInfoLoadingProcess(false));
                     console.log('fail');
                 });
         }
     },
     getUserInfoLoadingProcess: (isLoading) => {
         return {
-            type: ACTION_TYPES.GET_ABOUT_ME_SUCCESS,
+            type: ACTION_TYPES.GET_ABOUT_ME_PROCESS,
             payload: {
                 isLoading: isLoading
             }
@@ -147,4 +144,90 @@ export const actions = {
             payload: { ...data }
         };
     },
+
+    getAllTodos: () => {
+        return (dispatch) => {
+            dispatch(actions.getAllTodosLoadingProcess(true));
+
+            ApiHelper.getAllTodos()
+                .then(res => {
+                    console.log(res);
+                    dispatch(actions.getAllTodosSuccess({ elementsList: res.data, isLoading: false }));
+                })
+                .catch(err => {
+                    dispatch(actions.getAllTodosLoadingProcess(false));
+                    console.log('fail');
+                });
+        };
+    },
+
+    getAllTodosLoadingProcess: (isLoading) => {
+        return {
+            type: ACTION_TYPES.GET_ALL_TODOS_PROCESS,
+            payload: {
+                isLoading: isLoading
+            }
+        };
+    },
+
+    getAllTodosSuccess: (data) => {
+        return {
+            type: ACTION_TYPES.GET_ALL_TODOS_SUCCESS,
+            payload: { ...data }
+        };
+    },
+
+    getAllTodosFail: (data) => {
+        return {
+            type: ACTION_TYPES.GET_ALL_TODOS_FAIL,
+            payload: { ...data }
+        };
+    },
+
+    updateTodo: (data, callback, isNew) => {
+        return (dispatch) => {
+            // dispatch(actions.loadingOnLogin());
+            if (isNew) {
+                ApiHelper.createTodo({
+                    title: data.title,
+                    description: data.description
+                }).then(res => {
+                    console.log(res);
+                    callback();
+                    dispatch(actions.getAllTodos());
+                    // onSuccessfullLogin({
+                    //     ...res.data,
+                    //     login: data.login
+                    // }, callback);
+                })
+                    .catch(err => {
+                        console.log('fail');
+                        // dispatch(actions.loginFail(err.response.data.message));
+                    });
+            } else {
+                ApiHelper.updateTodo(data.id, {
+                    title: data.title,
+                    description: data.description
+                }).then(res => {
+                    console.log(res);
+                    callback();
+                    dispatch(actions.getAllTodos());
+                    // onSuccessfullLogin({
+                    //     ...res.data,
+                    //     login: data.login
+                    // }, callback);
+                })
+                    .catch(err => {
+                        console.log('fail');
+                        // dispatch(actions.loginFail(err.response.data.message));
+                    });
+            }
+        };
+    },
+
+    removeTodo: (todoId) => {
+        return (dispatch) => {
+            dispatch(actions.getAllTodos());
+        }
+    }
 };

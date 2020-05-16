@@ -60,7 +60,7 @@ class LoginPage extends React.Component {
                                 value={this.props.login ? this.props.login : ''}
                                 type='text'
                                 name='login'
-                                className='login-input-field'
+                            className='login-input-field'
                                 placeholder='Username'
                                 required autoComplete='false' />
                             <input onChange={this.onPasswordChange}
@@ -109,6 +109,7 @@ function LoginFormSubmit({ children, ...rest }) {
 }
 
 const mapStateToProps = (state) => {
+    state = state.login;
     return {
         login: state.login ? state.login : '',
         password: state.password ? state.password : '',

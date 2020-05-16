@@ -6,10 +6,13 @@ import {
   Redirect,
 } from 'react-router-dom';
 
+import ErrorBoundary from './components/common/ErrorBoundary';
 import NoMatch from './components/pages/NoMatch';
 import LoginPage from './components/pages/LoginPage';
 import MainView from './components/pages/MainView';
 import HomePage from './components/pages/HomePage';
+import TodosListPage from './components/pages/TodosListPage/TodosListPage';
+
 import { isAuthenticated } from './Utils';
 
 import './App.css';
@@ -17,25 +20,27 @@ import './App.css';
 class App extends React.Component {
   render = () => {
     return (
-      <Router>
-        <Switch>
-          <Route exact path="/login">
-            <LoginPage />
-          </Route>
-          <PrivateRoute path="/home" pageName='HOME'>
-            <HomePage />
+      <ErrorBoundary>
+        <Router>
+          <Switch>
+            <Route exact path="/login">
+              <LoginPage />
+            </Route>
+            <PrivateRoute path="/home" pageName='HOME'>
+              <HomePage />
+            </PrivateRoute>
+            <PrivateRoute path="/users" pageName='USERS'>
+              users
           </PrivateRoute>
-          <PrivateRoute path="/users" pageName='USERS'>
-            users
-          </PrivateRoute>
-          <PrivateRoute path="/todo" pageName='TODO'>
-            test
-          </PrivateRoute>
-          <Route path="*">
-            <NoMatch auth={isAuthenticated()} />
-          </Route>
-        </Switch>
-      </Router>
+            <PrivateRoute path="/todo" pageName='TODO'>
+              <TodosListPage />
+            </PrivateRoute>
+            <Route path="*">
+              <NoMatch auth={isAuthenticated()} />
+            </Route>
+          </Switch>
+        </Router>
+      </ErrorBoundary>
     );
   }
 }

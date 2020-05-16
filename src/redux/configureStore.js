@@ -1,9 +1,9 @@
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
-import todoAppReducer from "./reducers";
+import rootReducer from "./reducers/index";
 
 const configureStore = () => {
-    const store = createStore(todoAppReducer, applyMiddleware(thunk));
+    const store = createStore(rootReducer, applyMiddleware(thunk));
     return { store };
 };
 

@@ -80,6 +80,7 @@ function isMenuItemVisible(item, role) {
 }
 
 const mapStateToProps = (state) => {
+    state = state.home;
     return {
         name: state.name || localStorage.getItem('user'),
         role: state.role || localStorage.getItem('role')

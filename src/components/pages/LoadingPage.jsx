@@ -23,7 +23,7 @@ class LoadingPage extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        isAppLoaded: state.isAppLoaded
+        isAppLoaded: state.login.isAppLoaded
     };
 };
 

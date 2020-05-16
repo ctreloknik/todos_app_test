@@ -24,8 +24,8 @@ class HomePage extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    isLoading: state.isLoading,
-    name: state.name
+    isLoading: state.home.isLoading,
+    name: state.home.name
   };
 };
 

@@ -57,15 +57,15 @@ const ApiHelper = {
     },
 
     getTodo(id) {
-        return doRequest('todos/'+id, 'GET');
+        return doRequest(`todos/${id}`, 'GET');
     },
 
-    updateTodo(data) {
-        return doRequest('todos/'+data.id, 'PUT', data);
+    updateTodo(id, data) {
+        return doRequest(`todos/${id}`, 'PUT', data);
     },
 
     deleteTodo(id) {
-        return doRequest('todos/'+id, 'DELETE');
+        return doRequest(`todos/${id}`, 'DELETE');
     },
 }
 
