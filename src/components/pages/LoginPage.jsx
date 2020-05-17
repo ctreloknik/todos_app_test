@@ -5,7 +5,7 @@ import {
     Redirect
 } from 'react-router-dom';
 
-import { actions } from "../../redux/actions";
+import { actions } from "../../state/actions";
 import { connect } from "react-redux";
 
 import { isAuthenticated } from '../../Utils';

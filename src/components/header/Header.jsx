@@ -2,7 +2,7 @@ import { MENU_ITEMS } from '../../Utils';
 
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { actions } from "../../redux/actions";
+import { actions } from "../../state/actions";
 import { connect } from "react-redux";
 
 import './Header.scss';

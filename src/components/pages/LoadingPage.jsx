@@ -1,7 +1,7 @@
 import React from 'react';
 import App from '../../App';
 
-import { actions } from "../../redux/actions";
+import { actions } from "../../state/actions";
 import { connect } from "react-redux";
 
 class LoadingPage extends React.Component {

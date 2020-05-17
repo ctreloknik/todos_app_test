@@ -1,19 +1,23 @@
 import { ACTION_TYPES } from '../ActionTypesConst';
 
 export const initialInitState = {
-    elementsList: [],
+    // login: '',
+    // password: '',
+    name: '',
+    role: '',
     isLoading: false
 };
 
-export default function todosReducer(state = initialInitState, action) {
+export default function homeReducer(state = initialInitState, action) {
     switch (action.type) {
-        case ACTION_TYPES.GET_ALL_TODOS_SUCCESS: {
+        case ACTION_TYPES.GET_ABOUT_ME_SUCCESS: {
             return {
-                elementsList: action.payload.elementsList,
+                name: action.payload.name,
+                role: action.payload.role,
                 isLoading: action.payload.isLoading
             };
         }
-        case ACTION_TYPES.GET_ALL_TODOS_PROCESS: {
+        case ACTION_TYPES.GET_ABOUT_ME_PROCESS: {
             return {
                 isLoading: action.payload.isLoading
             };

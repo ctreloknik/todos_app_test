@@ -1,45 +1,27 @@
 import React from 'react';
 import './AddEditTodoDialog.scss'
 
-import { actions } from "../../../redux/actions";
+import { actions } from "../../../state/actions";
 import { connect } from "react-redux";
 
 class AddEditTodoDialog extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            todo: { ...props.todo }
-        }
-    }
-
-    componentDidUpdate(prevProps) {
-        // if (prevProps.todo.id !== this.props.todo.id) {
-        //     this.setState({ ...this.props.todo })
-        // }
-    }
-
     onSave = () => {
-        this.props.updateTodo(this.state.todo, this.props.onSave, this.props.isNew);
+        const data = {
+            id: this.props.todoId,
+            title: this.props.title,
+            description: this.props.description
+        }
+        this.props.updateTodo(data, this.props.isNew);
     }
 
     onTitleChange = event => {
-        this.setState({
-            ...this.state,
-            todo: {
-                ...this.state.todo,
-                title: event.target.value
-            }
-        })
+        const value = event.target.value;
+        this.props.onTitleChange(value)
     }
 
     onDescriptionChange = event => {
-        this.setState({
-            ...this.state,
-            todo: {
-                ...this.state.todo,
-                description: event.target.value
-            }
-        })
+        const value = event.target.value;
+        this.props.onDescriptionChange(value)
     }
 
     render() {
@@ -52,12 +34,12 @@ class AddEditTodoDialog extends React.Component {
 
                     <div className="modal-body">
                         <label>Name</label>
-                        <input value={this.state.todo.title}
+                        <input value={this.props.title}
                             type='text'
                             onChange={this.onTitleChange} />
 
                         <label>Description</label>
-                        <input value={this.state.todo.description}
+                        <input value={this.props.description}
                             onChange={this.onDescriptionChange} />
                     </div>
                     <div className="modal-footer">
@@ -70,14 +52,26 @@ class AddEditTodoDialog extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({ ...state.todos });
+const mapStateToProps = (state) => {
+    return {
+        title: state.todos.todoElement.title || '',
+        description: state.todos.todoElement.description || '',
+        isLoading: state.todos.isLoadingTodoWindow
+    }
+};
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    updateTodo: (data, callback, isNew) => {
-      dispatch(actions.updateTodo(data, callback, isNew));
+    return {
+        onTitleChange: (value) => {
+            dispatch(actions.onTitleChange(value));
+        },
+        onDescriptionChange: (value) => {
+            dispatch(actions.onDescriptionChange(value));
+        },
+        updateTodo: (data, isNew) => {
+            dispatch(actions.updateTodo(data, isNew));
+        }
     }
-  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddEditTodoDialog);

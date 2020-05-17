@@ -56,7 +56,7 @@ const ApiHelper = {
         return doRequest('todos', 'POST', data);
     },
 
-    getTodo(id) {
+    getTodoById(id) {
         return doRequest(`todos/${id}`, 'GET');
     },
 

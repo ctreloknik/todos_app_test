@@ -2,32 +2,22 @@ import React from 'react';
 import LoadingElement from '../../common/LoadingElement';
 import AddEditTodoDialog from './AddEditTodoDialog';
 import './TodosListPage.scss';
-import { actions } from "../../../redux/actions";
+import { actions } from "../../../state/actions";
 import { connect } from "react-redux";
 
 class TodosListPage extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      isAddOrEditDialogOpened: false
-    }
-
-    this.selectedRecord = null;
-  }
-
   componentDidMount() {
     this.props.getAllTodos();
   }
 
   onEditButtonClick = editedTodo => {
-    this.isNew = !editedTodo;
-    this.selectedRecord = editedTodo;
-    this.setState({ isAddOrEditDialogOpened: true });
-    // if (editedTodo) {
-    //   this.setState({ editedTodo })
-    // } else {
-    //   this.setState({ newTodo: true });
-    // }
+    if (editedTodo) {
+      this.isNew = false;
+      this.props.getTodoById(editedTodo.id);
+    } else {
+      this.isNew = true;
+      this.props.createNewTodoElement();
+    }
   }
 
   onRemoveButtonClick = (todoId) => {
@@ -35,22 +25,7 @@ class TodosListPage extends React.Component {
   }
 
   onModalClose = () => {
-    // if (this.state.editedTodo) {
-      this.setState({ isAddOrEditDialogOpened: false });
-      this.selectedRecord = null;
-    // } else if (this.state.newTodo) {
-      // this.setState({ newTodo: null })
-    // }
-  }
-
-  onChangesSave = todo => {
-    // if (this.state.editedTodo) {
-    //   this.props.updateTodo(todo);
-    // } else {
-    // }
-    this.selectedRecord = null;
-    this.setState({ isAddOrEditDialogOpened: false });
-    // this.setState({ editedTodo: null }) // TODO
+    this.props.cancelEditTodo();
   }
 
   renderTodos() {
@@ -72,6 +47,7 @@ class TodosListPage extends React.Component {
       (
         <>
           <button onClick={() => this.onEditButtonClick(null)}>Add note</button>
+          {this.props.isLoadingTodoFail ? 'Loading TODO failed' : null}
           <table className='todos-list-table'>
             <thead>
               <tr>
@@ -85,23 +61,38 @@ class TodosListPage extends React.Component {
               {this.renderTodos()}
             </tbody>
           </table>
-          {this.state.isAddOrEditDialogOpened
+          {this.props.selectedRecord
             && <AddEditTodoDialog
               isNew={this.isNew}
-              onSave={this.onChangesSave}
               onCancel={this.onModalClose}
-              todo={this.selectedRecord} />}
+              todoId={this.props.selectedRecord.id} />}
         </>
       );
   }
 }
 
-const mapStateToProps = (state) => ({ ...state.todos });
+const mapStateToProps = (state) => {
+  return {
+    selectedRecord: state.todos.todoElement,
+    elementsList: state.todos.elementsList || [],
+    isLoading: state.todos.isLoading,
+    isLoadingTodoFail: state.todos.isLoadingTodoFail
+  }
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getAllTodos: () => {
       dispatch(actions.getAllTodos());
+    },
+    createNewTodoElement: () => {
+      dispatch(actions.createNewTodoElement());
+    },
+    getTodoById: (todoId) => {
+      dispatch(actions.getTodoById(todoId));
+    },
+    cancelEditTodo: () => {
+      dispatch(actions.cancelEditTodo());
     },
     removeTodo: (todoId) => {
       dispatch(actions.removeTodo(todoId));

@@ -4,7 +4,7 @@ import './index.css';
 import LoadingPage from './components/pages/LoadingPage';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from "react-redux";
-import configureStore from "./redux/configureStore"
+import configureStore from "./state/configureStore"
 
 const configuredStore = configureStore();
 const store = configuredStore.store;

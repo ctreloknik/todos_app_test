@@ -12,15 +12,13 @@ export const actions = {
         return (dispatch) => {
             dispatch(actions.checkAutentificationProcess(false));
 
-            ApiHelper.getInfoAboutMe()
-                .then(res => {
-                    onSuccessfullLogin({ ...res.data });
-                    dispatch(actions.checkAutentificationProcess(true, true));
-                })
-                .catch(err => {
-                    dispatch(actions.checkAutentificationProcess(true, false));
-                    doLogout();
-                });
+            ApiHelper.getInfoAboutMe().then(res => {
+                onSuccessfullLogin({ ...res.data });
+                dispatch(actions.checkAutentificationProcess(true, true));
+            }).catch(err => {
+                dispatch(actions.checkAutentificationProcess(true, false));
+                doLogout();
+            });
         }
     },
 
@@ -68,11 +66,10 @@ export const actions = {
                     ...res.data,
                     login: data.login
                 }, callback);
-            })
-                .catch(err => {
-                    console.log('fail');
-                    dispatch(actions.loginFail(err.response.data.message));
-                });
+            }).catch(err => {
+                console.log('fail');
+                dispatch(actions.loginFail(err.response.data.message));
+            });
         };
     },
 
@@ -97,15 +94,13 @@ export const actions = {
     },
     logout: (callback) => {
         return (dispatch) => {
-            ApiHelper.logout()
-                .then(res => {
-                    console.log(res);
-                    dispatch(actions.logoutSuccess())
-                    onSuccessfullLogout(callback);
-                })
-                .catch(err => {
-                    console.log('fail');
-                });
+            ApiHelper.logout().then(res => {
+                console.log(res);
+                dispatch(actions.logoutSuccess())
+                onSuccessfullLogout(callback);
+            }).catch(err => {
+                console.log('fail');
+            });
         }
     },
     logoutSuccess: () => {
@@ -119,15 +114,13 @@ export const actions = {
         return (dispatch) => {
             dispatch(actions.getUserInfoLoadingProcess(true));
 
-            ApiHelper.getInfoAboutMe()
-                .then(res => {
-                    console.log(res);
-                    dispatch(actions.getUserInfoSuccess({ ...res.data, isLoading: false }));
-                })
-                .catch(err => {
-                    dispatch(actions.getUserInfoLoadingProcess(false));
-                    console.log('fail');
-                });
+            ApiHelper.getInfoAboutMe().then(res => {
+                console.log(res);
+                dispatch(actions.getUserInfoSuccess({ ...res.data, isLoading: false }));
+            }).catch(err => {
+                dispatch(actions.getUserInfoLoadingProcess(false));
+                console.log('fail');
+            });
         }
     },
     getUserInfoLoadingProcess: (isLoading) => {
@@ -149,15 +142,13 @@ export const actions = {
         return (dispatch) => {
             dispatch(actions.getAllTodosLoadingProcess(true));
 
-            ApiHelper.getAllTodos()
-                .then(res => {
-                    console.log(res);
-                    dispatch(actions.getAllTodosSuccess({ elementsList: res.data, isLoading: false }));
-                })
-                .catch(err => {
-                    dispatch(actions.getAllTodosLoadingProcess(false));
-                    console.log('fail');
-                });
+            ApiHelper.getAllTodos().then(res => {
+                console.log(res);
+                dispatch(actions.getAllTodosSuccess({ elementsList: res.data, isLoading: false }));
+            }).catch(err => {
+                dispatch(actions.getAllTodosLoadingProcess(false));
+                console.log('fail');
+            });
         };
     },
 
@@ -184,50 +175,118 @@ export const actions = {
         };
     },
 
-    updateTodo: (data, callback, isNew) => {
+    getTodoElementProcess: (isLoading) => {
+        return {
+            type: ACTION_TYPES.GET_TODO_PROCESS,
+            payload: {
+                isLoading: isLoading
+            }
+        };
+    },
+
+    getTodoElementSuccess: (data) => {
+        return {
+            type: ACTION_TYPES.GET_TODO_SUCCESS,
+            payload: { ...data }
+        };
+    },
+
+    getTodoElementFail: () => {
+        return {
+            type: ACTION_TYPES.GET_TODO_FAIL,
+            isLoadingTodoWindow: false,
+            isLoadingTodoFail: true,
+        };
+    },
+
+    getTodoById: (id) => {
         return (dispatch) => {
-            // dispatch(actions.loadingOnLogin());
+            dispatch(actions.getTodoElementProcess(true));
+
+            ApiHelper.getTodoById(id).then(res => {
+                dispatch(actions.getTodoElementSuccess({ todoElement: res.data, isLoading: false }));
+            }).catch(err => {
+                dispatch(actions.getTodoElementFail());
+            })
+        }
+    },
+
+    onTitleChange: (title) => {
+        return {
+            type: ACTION_TYPES.TODO_TITLE_CHANGE,
+            title: title,
+            errorText: ''
+        };
+    },
+
+    onDescriptionChange: (description) => {
+        return {
+            type: ACTION_TYPES.TODO_DESCRIPTION_CHANGE,
+            description: description,
+            errorText: ''
+        };
+    },
+
+    createNewTodoElement: () => {
+        return {
+            type: ACTION_TYPES.GET_TODO_SUCCESS,
+            payload: {
+                todoElement: {
+                    title: '',
+                    description: ''
+                },
+                isLoading: false
+            }
+        }
+    },
+
+    cancelEditTodo: () => {
+        return {
+            type: ACTION_TYPES.GET_TODO_SUCCESS,
+            payload: {
+                todoElement: null,
+                isLoading: false
+            }
+        }
+    },
+
+    updateTodo: (data, isNew) => {
+        return (dispatch) => {
+            dispatch(actions.getTodoElementProcess(true));
+
             if (isNew) {
                 ApiHelper.createTodo({
                     title: data.title,
                     description: data.description
                 }).then(res => {
                     console.log(res);
-                    callback();
                     dispatch(actions.getAllTodos());
-                    // onSuccessfullLogin({
-                    //     ...res.data,
-                    //     login: data.login
-                    // }, callback);
-                })
-                    .catch(err => {
-                        console.log('fail');
-                        // dispatch(actions.loginFail(err.response.data.message));
-                    });
+                }).catch(err => {
+                    console.log('fail');
+                    // dispatch(actions.loginFail(err.response.data.message));
+                });
             } else {
                 ApiHelper.updateTodo(data.id, {
                     title: data.title,
                     description: data.description
                 }).then(res => {
                     console.log(res);
-                    callback();
                     dispatch(actions.getAllTodos());
-                    // onSuccessfullLogin({
-                    //     ...res.data,
-                    //     login: data.login
-                    // }, callback);
-                })
-                    .catch(err => {
-                        console.log('fail');
-                        // dispatch(actions.loginFail(err.response.data.message));
-                    });
+                }).catch(err => {
+                    console.log('fail');
+                    // dispatch(actions.loginFail(err.response.data.message));
+                });
             }
         };
     },
 
     removeTodo: (todoId) => {
         return (dispatch) => {
-            dispatch(actions.getAllTodos());
+            ApiHelper.deleteTodo(todoId).then(data => {
+                dispatch(actions.getAllTodos());
+            }).catch(err => {
+
+            })
         }
     }
 };
