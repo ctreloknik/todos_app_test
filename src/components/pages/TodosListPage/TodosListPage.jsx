@@ -5,6 +5,8 @@ import './TodosListPage.scss';
 import { actions } from "../../../state/actions";
 import { connect } from "react-redux";
 
+import { SecurityCfgCheck } from "../../../Utils";
+
 class TodosListPage extends React.Component {
   componentDidMount() {
     this.props.getAllTodos();
@@ -28,6 +30,14 @@ class TodosListPage extends React.Component {
     this.props.cancelEditTodo();
   }
 
+  canUserEditTodo = (createdBy) => {
+    return SecurityCfgCheck.canUserEditTodoElement(createdBy);
+  }
+
+  canUserRemoveTodo = (createdBy) => {
+    return SecurityCfgCheck.canUserRemoveTodoElement(createdBy);
+  }
+
   renderTodos() {
     return this.props.elementsList.map((todo, index) => (
       <tr key={index}>
@@ -35,8 +45,10 @@ class TodosListPage extends React.Component {
         <td>{todo.description}</td>
         <td>{todo.createdBy}</td>
         <td>
-          <button onClick={() => this.onEditButtonClick(todo)}>Edit</button>
-          <button onClick={() => this.onRemoveButtonClick(todo.id)}>Remove</button>
+          <button disabled={!this.canUserEditTodo(todo.createdBy)}
+            onClick={() => this.onEditButtonClick(todo)}>Edit</button>
+          <button disabled={!this.canUserEditTodo(todo.createdBy)}
+            onClick={() => this.onRemoveButtonClick(todo.id)}>Remove</button>
         </td>
       </tr>
     ))
@@ -47,7 +59,7 @@ class TodosListPage extends React.Component {
       (
         <>
           <button onClick={() => this.onEditButtonClick(null)}>Add note</button>
-          {this.props.isLoadingTodoFail ? 'Loading TODO failed' : null}
+          {this.props.errorText || null}
           <table className='todos-list-table'>
             <thead>
               <tr>
@@ -76,7 +88,7 @@ const mapStateToProps = (state) => {
     selectedRecord: state.todos.todoElement,
     elementsList: state.todos.elementsList || [],
     isLoading: state.todos.isLoading,
-    isLoadingTodoFail: state.todos.isLoadingTodoFail
+    errorText: state.todos.errorText
   }
 };
 

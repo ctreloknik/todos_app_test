@@ -30,7 +30,7 @@ export default function todosReducer(state = initialInitState, action) {
         case ACTION_TYPES.GET_TODO_FAIL: {
             return {
                 ...state,
-                isLoadingTodoFail: action.isLoadingTodoFail,
+                errorText: action.errorText,
                 isLoadingTodoWindow: action.isLoading
             };
         }

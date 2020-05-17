@@ -30,4 +30,7 @@ export const ACTION_TYPES = {
     SAVE_TODO_PROCESS: 'SAVE_TODO_PROCESS',
     SAVE_TODO_SUCCESS: 'SAVE_TODO_SUCCESS',
     SAVE_TODO_FAIL: 'SAVE_TODO_FAIL', // todo сообщение об ошибке загрузки
+
+    REMOVE_TODO_PROCESS: 'REMOVE_TODO_PROCESS',
+    REMOVE_TODO_FAIL: 'REMOVE_TODO_FAIL', // todo сообщение об ошибке загрузки
 };

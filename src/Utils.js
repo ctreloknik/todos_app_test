@@ -50,6 +50,22 @@ export const SecurityCfgCheck = {
     isPageEnabled(page, role) {
         const checkingRole = role || LOCAL_AUTH.role;
         return SecurityCfg.PAGES[page].includes(checkingRole);
+    },
+
+    canUserEditTodoElement(createdBy) {
+        if (LOCAL_AUTH.role === 'admin') {
+            return true;
+        }
+
+        return (LOCAL_AUTH.name === 'NOTASUPERUSER' && createdBy === 'user'); // TODO ????
+    },
+
+    canUserRemoveTodoElement(createdBy) {
+        if (LOCAL_AUTH.role === 'admin') {
+            return true;
+        }
+
+        return (LOCAL_AUTH.name === 'NOTASUPERUSER' && createdBy === 'user'); // TODO ????
     }
 }
 

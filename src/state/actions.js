@@ -195,7 +195,7 @@ export const actions = {
         return {
             type: ACTION_TYPES.GET_TODO_FAIL,
             isLoadingTodoWindow: false,
-            isLoadingTodoFail: true,
+            errorText: 'Loading TODO failed',
         };
     },
 
@@ -285,8 +285,18 @@ export const actions = {
             ApiHelper.deleteTodo(todoId).then(data => {
                 dispatch(actions.getAllTodos());
             }).catch(err => {
-
+                dispatch(actions.removeTodoFail());
             })
+        }
+    },
+
+    removeTodoFail: () => {
+        return {
+            type: ACTION_TYPES.REMOVE_TODO_FAIL,
+            payload: {
+                errorText: 'Remove failed.',
+                isLoading: false
+            }
         }
     }
 };
