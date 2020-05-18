@@ -27,7 +27,7 @@ api.interceptors.response.use(function (response) {
             document.location.reload();
         }
     } else {
-        return Promise.reject(error);
+        return Promise.reject({...error, isServerError: true});
     }
 });
 

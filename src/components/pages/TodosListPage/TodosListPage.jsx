@@ -4,6 +4,8 @@ import AddEditTodoDialog from './AddEditTodoDialog';
 import './TodosListPage.scss';
 import { actions } from "../../../state/actions";
 import { connect } from "react-redux";
+import { getTodosSelector } from "../../../state/selectors/todoSelector";
+
 
 import { SecurityCfgCheck } from "../../../Utils";
 
@@ -59,20 +61,23 @@ class TodosListPage extends React.Component {
       (
         <>
           <button onClick={() => this.onEditButtonClick(null)}>Add note</button>
+          <button onClick={() => this.props.getAllTodos()}>Reload</button>
           {this.props.errorText || null}
-          <table className='todos-list-table'>
-            <thead>
-              <tr>
-                <td>Name</td>
-                <td>Description</td>
-                <td>Created by</td>
-                <td></td>
-              </tr>
-            </thead>
-            <tbody>
-              {this.renderTodos()}
-            </tbody>
-          </table>
+          {!this.props.isLoadingTodosFailed ? (
+            <table className='todos-list-table'>
+              <thead>
+                <tr>
+                  <td>Name</td>
+                  <td>Description</td>
+                  <td>Created by</td>
+                  <td></td>
+                </tr>
+              </thead>
+              <tbody>
+                {this.renderTodos()}
+              </tbody>
+            </table>
+          ) : null}
           {this.props.selectedRecord
             && <AddEditTodoDialog
               isNew={this.isNew}
@@ -86,7 +91,8 @@ class TodosListPage extends React.Component {
 const mapStateToProps = (state) => {
   return {
     selectedRecord: state.todos.todoElement,
-    elementsList: state.todos.elementsList || [],
+    elementsList: getTodosSelector(state) || [],
+    isLoadingTodosFailed: state.todos.isLoadingTodosFailed,
     isLoading: state.todos.isLoading,
     errorText: state.todos.errorText
   }

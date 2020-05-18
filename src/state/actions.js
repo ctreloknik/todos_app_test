@@ -68,7 +68,13 @@ export const actions = {
                 }, callback);
             }).catch(err => {
                 console.log('fail');
-                dispatch(actions.loginFail(err.response.data.message));
+                let errorMessage = '';
+                if (err.isServerError) {
+                    errorMessage = 'Server error. Please try again';
+                } else {
+                    errorMessage = err.response.data.message;
+                }
+                dispatch(actions.loginFail(errorMessage));
             });
         };
     },
@@ -82,6 +88,7 @@ export const actions = {
             }
         };
     },
+
     loginFail: (data) => {
         return {
             type: ACTION_TYPES.LOGIN_FAIL,
@@ -92,6 +99,7 @@ export const actions = {
             }
         };
     },
+
     logout: (callback) => {
         return (dispatch) => {
             ApiHelper.logout().then(res => {
@@ -103,6 +111,7 @@ export const actions = {
             });
         }
     },
+
     logoutSuccess: () => {
         return {
             type: ACTION_TYPES.LOGOUT,
@@ -123,6 +132,7 @@ export const actions = {
             });
         }
     },
+
     getUserInfoLoadingProcess: (isLoading) => {
         return {
             type: ACTION_TYPES.GET_ABOUT_ME_PROCESS,
@@ -131,6 +141,7 @@ export const actions = {
             }
         };
     },
+
     getUserInfoSuccess: (data) => {
         return {
             type: ACTION_TYPES.GET_ABOUT_ME_SUCCESS,
@@ -146,7 +157,7 @@ export const actions = {
                 console.log(res);
                 dispatch(actions.getAllTodosSuccess({ elementsList: res.data, isLoading: false }));
             }).catch(err => {
-                dispatch(actions.getAllTodosLoadingProcess(false));
+                dispatch(actions.getAllTodosFail());
                 console.log('fail');
             });
         };
@@ -171,7 +182,9 @@ export const actions = {
     getAllTodosFail: (data) => {
         return {
             type: ACTION_TYPES.GET_ALL_TODOS_FAIL,
-            payload: { ...data }
+            isLoadingTodosFailed: true,
+            isLoading: false,
+            errorText: 'Error loading data. Please try again.'
         };
     },
 

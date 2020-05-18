@@ -4,7 +4,8 @@ export const initialInitState = {
     todoElement: {},
     elementsList: [],
     isLoading: false,
-    isLoadingTodoFail: false
+    isLoadingTodoFail: false,
+    isLoadingTodosFailed: false
 };
 
 export default function todosReducer(state = initialInitState, action) {
@@ -12,7 +13,16 @@ export default function todosReducer(state = initialInitState, action) {
         case ACTION_TYPES.GET_ALL_TODOS_SUCCESS: {
             return {
                 elementsList: action.payload.elementsList,
-                isLoading: action.payload.isLoading
+                isLoading: action.payload.isLoading,
+                isLoadingTodosFailed: action.payload.isLoading
+            };
+        }
+        case ACTION_TYPES.GET_ALL_TODOS_FAIL: {
+            return {
+                ...state,
+                errorText: action.errorText,
+                isLoadingTodosFailed: action.isLoadingTodosFailed,
+                isLoading: action.isLoading
             };
         }
         case ACTION_TYPES.GET_ALL_TODOS_PROCESS: {
@@ -23,6 +33,7 @@ export default function todosReducer(state = initialInitState, action) {
         case ACTION_TYPES.GET_TODO_SUCCESS: {
             return {
                 ...state,
+                errorText: '',
                 todoElement: action.payload.todoElement,
                 isLoadingTodoWindow: action.payload.isLoading
             };
