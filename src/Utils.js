@@ -24,8 +24,6 @@ const LOCAL_AUTH = {
         this.login = data.login;
         this.name = data.name;
         this.role = data.role;
-
-        console.log(LOCAL_AUTH);
     },
     signout(cb) {
         localStorage.removeItem('user');
@@ -48,7 +46,7 @@ const SecurityCfg = {
 
 export const SecurityCfgCheck = {
     isPageEnabled(page, role) {
-        const checkingRole = role || LOCAL_AUTH.role;
+        const checkingRole = role || localStorage.getItem('role');
         return SecurityCfg.PAGES[page].includes(checkingRole);
     },
 
@@ -67,6 +65,11 @@ export const SecurityCfgCheck = {
 
         return (LOCAL_AUTH.name === 'NOTASUPERUSER' && createdBy === 'user'); // TODO ????
     }
+}
+
+export function redirectToPage(url) {
+    window.history.replaceState({}, null, `/${url}`);
+    document.location.reload();
 }
 
 export function onSuccessfullLogin(data, callback) {

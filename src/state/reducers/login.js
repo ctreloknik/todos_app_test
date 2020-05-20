@@ -3,8 +3,8 @@ import { ACTION_TYPES } from '../ActionTypesConst';
 export const initialInitState = {
     login: '',
     password: '',
-    name: '',
-    role: '',
+    // name: '',
+    // role: '',
     isLoading: false
 };
 
@@ -28,7 +28,7 @@ export default function loginReducer(state = initialInitState, action) {
             return {
                 ...state,
                 password: action.password,
-                isValid: !!(state.login && action.password),
+                isValid: !!(state.login && action.password), // todo selector
                 errorText: action.errorText
             }
         }
@@ -49,8 +49,9 @@ export default function loginReducer(state = initialInitState, action) {
         // }
         case ACTION_TYPES.LOGIN_SUCCESS: {
             return {
-                name: action.payload.name,
-                role: action.payload.role
+                // name: action.payload.name, // todo remove
+                // role: action.payload.role, // todo remove
+                isLoading: action.payload.isLoading
             };
         }
         case ACTION_TYPES.LOGIN_FAIL: {
@@ -65,19 +66,9 @@ export default function loginReducer(state = initialInitState, action) {
         case ACTION_TYPES.LOGOUT: {
             return {
                 ...state
-                // login: '',
-                // password: '',
-                // name: '',
-                // role: '',
                 // isLoading: false
             };
         }
-        // case ACTION_TYPES.GET_ABOUT_ME: {
-        //     return {
-        //         name: action.payload.name,
-        //         role: action.payload.role
-        //     };
-        // }
         default: return state;
     }
 }

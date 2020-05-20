@@ -11,7 +11,7 @@ class AddEditTodoDialog extends React.Component {
             title: this.props.title,
             description: this.props.description
         }
-        this.props.updateTodo(data, this.props.isNew);
+        this.props.updateTodo(data);
     }
 
     onTitleChange = event => {
