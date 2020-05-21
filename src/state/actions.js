@@ -1,7 +1,6 @@
 import {
     onSuccessfullLogin,
-    onSuccessfullLogout,
-    doLogout
+    onSuccessfullLogout
 } from '../Utils';
 
 import ApiHelper from '../ApiHelper';
@@ -117,7 +116,7 @@ export const actions = {
             ApiHelper.getInfoAboutMe().then(res => {
                 dispatch(actions.getUserInfoSuccess({ ...res.data, isLoading: false }));
             }).catch(err => {
-                dispatch(actions.getUserInfoLoadingProcess(false));
+                dispatch(actions.getUserInfoFail());
             });
         }
     },
@@ -135,6 +134,16 @@ export const actions = {
         return {
             type: ACTION_TYPES.GET_ABOUT_ME_SUCCESS,
             payload: { ...data }
+        };
+    },
+
+    getUserInfoFail: () => {
+        return {
+            type: ACTION_TYPES.GET_ABOUT_ME_FAIL,
+            payload: {
+                errorText: 'Error loading data. Please try again.',
+                isLoading: false
+            }
         };
     },
 
@@ -252,16 +261,16 @@ export const actions = {
 
     updateTodo: (data) => {
         return (dispatch) => {
-            dispatch(actions.getTodoElementProcess(true));
+            dispatch(actions.updateTodoProcess(true));
 
-            if (data.id) {
+            if (!data.id) {
                 ApiHelper.createTodo({
                     title: data.title,
                     description: data.description
                 }).then(res => {
                     dispatch(actions.getAllTodos());
                 }).catch(err => {
-                    // dispatch(actions.loginFail(err.response.data.message));
+                    dispatch(actions.updateTodoFail('Adding TODO failed.'));
                 });
             } else {
                 ApiHelper.updateTodo(data.id, {
@@ -270,10 +279,30 @@ export const actions = {
                 }).then(res => {
                     dispatch(actions.getAllTodos());
                 }).catch(err => {
-                    // dispatch(actions.loginFail(err.response.data.message));
+                    dispatch(actions.updateTodoFail('Updating TODO failed.'));
                 });
             }
         };
+    },
+
+    updateTodoProcess: (isLoading) => {
+        return {
+            type: ACTION_TYPES.SAVE_TODO_PROCESS,
+            payload: {
+                errorText: '',
+                isLoadingTodoWindow: isLoading
+            }
+        }
+    },
+
+    updateTodoFail: (errorText) => {
+        return {
+            type: ACTION_TYPES.SAVE_TODO_FAIL,
+            payload: {
+                isLoadingTodoWindow: false,
+                errorText: errorText
+            }
+        }
     },
 
     removeTodo: (todoId) => {

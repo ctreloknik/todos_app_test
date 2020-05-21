@@ -35,16 +35,19 @@ class AddEditTodoDialog extends React.Component {
                     <div className="modal-body">
                         <label>Name</label>
                         <input value={this.props.title}
+                            disabled={this.props.isLoadingTodoWindow}
                             type='text'
                             onChange={this.onTitleChange} />
 
                         <label>Description</label>
                         <input value={this.props.description}
+                            disabled={this.props.isLoadingTodoWindow}
                             onChange={this.onDescriptionChange} />
                     </div>
                     <div className="modal-footer">
                         <button onClick={this.props.onCancel} className="modal-footer-button">Cancel</button>
                         <button onClick={this.onSave} className="modal-footer-button">Save</button>
+                        {this.props.saveErrorText}
                     </div>
                 </div>
             </aside>
@@ -56,7 +59,8 @@ const mapStateToProps = (state) => {
     return {
         title: state.todos.todoElement.title || '',
         description: state.todos.todoElement.description || '',
-        isLoading: state.todos.isLoadingTodoWindow
+        isLoadingTodoWindow: state.todos.isLoadingTodoWindow,
+        saveErrorText: state.todos.saveErrorText
     }
 };
 

@@ -1,11 +1,10 @@
 import { ACTION_TYPES } from '../ActionTypesConst';
 
 export const initialInitState = {
-    // login: '',
-    // password: '',
     name: '',
     role: '',
-    isLoading: false
+    isLoading: false,
+    errortext: ''
 };
 
 export default function homeReducer(state = initialInitState, action) {
@@ -14,7 +13,14 @@ export default function homeReducer(state = initialInitState, action) {
             return {
                 name: action.payload.name,
                 role: action.payload.role,
-                isLoading: action.payload.isLoading
+                isLoading: action.payload.isLoading,
+                errortext: ''
+            };
+        }
+        case ACTION_TYPES.GET_ABOUT_ME_FAIL: {
+            return {
+                isLoading: action.payload.isLoading,
+                errorText: action.payload.errorText
             };
         }
         case ACTION_TYPES.GET_ABOUT_ME_PROCESS: {

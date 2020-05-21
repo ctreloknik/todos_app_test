@@ -60,7 +60,7 @@ class LoginPage extends React.Component {
                                 value={this.props.login ? this.props.login : ''}
                                 type='text'
                                 name='login'
-                            className='login-input-field'
+                                className='login-input-field'
                                 placeholder='Username'
                                 required autoComplete='false' />
                             <input onChange={this.onPasswordChange}
