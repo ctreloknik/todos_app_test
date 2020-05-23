@@ -4,7 +4,7 @@ import AddEditTodoDialog from './AddEditTodoDialog';
 import './TodosListPage.scss';
 import { actions } from "../../../state/actions";
 import { connect } from "react-redux";
-import { getTodosSelector } from "../../../state/selectors/todoSelector";
+import { getTodosSelector } from "../../../state/ducks/todos/selectors";
 
 
 import { SecurityCfgCheck } from "../../../Utils";

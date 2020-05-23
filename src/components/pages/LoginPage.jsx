@@ -5,9 +5,9 @@ import {
     Redirect
 } from 'react-router-dom';
 
-import { actions } from "../../state/actions";
+import { loginOperations } from "../../state/ducks/login/index";
 import { connect } from "react-redux";
-
+import { getLoginPasswordSelector } from "../../state/ducks/login/selectors";
 import { isAuthenticated } from '../../Utils';
 
 import './LoginPage.scss';
@@ -109,27 +109,26 @@ function LoginFormSubmit({ children, ...rest }) {
 }
 
 const mapStateToProps = (state) => {
-    state = state.login;
     return {
-        login: state.login ? state.login : '',
-        password: state.password ? state.password : '',
-        isLoading: state.isLoading,
-        isValid: state.isValid,
-        errorText: state.errorText || ''
+        login: state.login.login ? state.login.login : '',
+        password: state.login.password ? state.login.password : '',
+        isLoading: state.login.isLoading,
+        isValid: getLoginPasswordSelector(state),
+        errorText: state.login.errorText || ''
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         usernameChange: (login) => {
-            dispatch(actions.usernameChange(login));
+            dispatch(loginOperations.usernameChange(login));
         },
         passwordChange: (pass) => {
-            dispatch(actions.passwordChange(pass));
+            dispatch(loginOperations.passwordChange(pass));
         },
 
         loginAction: (data, callback) => {
-            dispatch(actions.loginAction(data, callback));
+            dispatch(loginOperations.loginAction(data, callback));
         }
     }
 };

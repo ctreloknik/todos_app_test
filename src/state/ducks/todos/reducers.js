@@ -1,4 +1,4 @@
-import { ACTION_TYPES } from '../ActionTypesConst';
+import { ACTION_TYPES } from '../../ActionTypesConst';
 
 export const initialInitState = {
     todoElement: {},
