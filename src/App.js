@@ -31,12 +31,12 @@ class App extends React.Component {
             </PrivateRoute>
             <PrivateRoute path="/users" pageName='USERS'>
               users
-          </PrivateRoute>
+            </PrivateRoute>
             <PrivateRoute path="/todo" pageName='TODO'>
               <TodosListPage />
             </PrivateRoute>
             <Route path="*">
-              <NoMatch auth={isAuthenticated()} />
+              <NoMatch />
             </Route>
           </Switch>
         </Router>

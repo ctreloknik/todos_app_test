@@ -14,12 +14,10 @@ class TodosListPage extends React.Component {
     this.props.getAllTodos();
   }
 
-  onEditButtonClick = editedTodo => {
-    if (editedTodo) {
-      this.isNew = false;
-      this.props.getTodoById(editedTodo.id);
+  onEditButtonClick = todoId => {
+    if (todoId) {
+      this.props.getTodoById(todoId);
     } else {
-      this.isNew = true;
       this.props.createNewTodoElement();
     }
   }
@@ -48,7 +46,7 @@ class TodosListPage extends React.Component {
         <td>{todo.createdBy}</td>
         <td>
           <button disabled={!this.canUserEditTodo(todo.createdBy)}
-            onClick={() => this.onEditButtonClick(todo)}>Edit</button>
+            onClick={() => this.onEditButtonClick(todo.id)}>Edit</button>
           <button disabled={!this.canUserEditTodo(todo.createdBy)}
             onClick={() => this.onRemoveButtonClick(todo.id)}>Remove</button>
         </td>
@@ -80,7 +78,6 @@ class TodosListPage extends React.Component {
           ) : null}
           {this.props.selectedRecord
             && <AddEditTodoDialog
-              isNew={this.isNew}
               onCancel={this.onModalClose}
               todoId={this.props.selectedRecord.id} />}
         </>

@@ -1,7 +1,6 @@
 import {
     onSuccessfullLogin,
-    onSuccessfullLogout,
-    doLogout
+    onSuccessfullLogout
 } from '../Utils';
 
 import ApiHelper from '../ApiHelper';
@@ -17,7 +16,6 @@ export const actions = {
                 dispatch(actions.checkAutentificationProcess(true, true));
             }).catch(err => {
                 dispatch(actions.checkAutentificationProcess(true, false));
-                doLogout();
             });
         }
     },
@@ -60,7 +58,7 @@ export const actions = {
                 login: data.login,
                 password: data.password
             }).then(res => {
-                console.log(res);
+                // console.log(res);
                 dispatch(actions.loginSuccess(res.data));
                 onSuccessfullLogin({
                     ...res.data,
@@ -68,13 +66,7 @@ export const actions = {
                 }, callback);
             }).catch(err => {
                 console.log('fail');
-                let errorMessage = '';
-                if (err.isServerError) {
-                    errorMessage = 'Server error. Please try again';
-                } else {
-                    errorMessage = err.response.data.message;
-                }
-                dispatch(actions.loginFail(errorMessage));
+                dispatch(actions.loginFail(err.errorText));
             });
         };
     },
@@ -103,11 +95,9 @@ export const actions = {
     logout: (callback) => {
         return (dispatch) => {
             ApiHelper.logout().then(res => {
-                console.log(res);
                 dispatch(actions.logoutSuccess())
                 onSuccessfullLogout(callback);
             }).catch(err => {
-                console.log('fail');
             });
         }
     },
@@ -124,11 +114,9 @@ export const actions = {
             dispatch(actions.getUserInfoLoadingProcess(true));
 
             ApiHelper.getInfoAboutMe().then(res => {
-                console.log(res);
                 dispatch(actions.getUserInfoSuccess({ ...res.data, isLoading: false }));
             }).catch(err => {
-                dispatch(actions.getUserInfoLoadingProcess(false));
-                console.log('fail');
+                dispatch(actions.getUserInfoFail());
             });
         }
     },
@@ -149,16 +137,24 @@ export const actions = {
         };
     },
 
+    getUserInfoFail: () => {
+        return {
+            type: ACTION_TYPES.GET_ABOUT_ME_FAIL,
+            payload: {
+                errorText: 'Error loading data. Please try again.',
+                isLoading: false
+            }
+        };
+    },
+
     getAllTodos: () => {
         return (dispatch) => {
             dispatch(actions.getAllTodosLoadingProcess(true));
 
             ApiHelper.getAllTodos().then(res => {
-                console.log(res);
                 dispatch(actions.getAllTodosSuccess({ elementsList: res.data, isLoading: false }));
             }).catch(err => {
                 dispatch(actions.getAllTodosFail());
-                console.log('fail');
             });
         };
     },
@@ -263,34 +259,50 @@ export const actions = {
         }
     },
 
-    updateTodo: (data, isNew) => {
+    updateTodo: (data) => {
         return (dispatch) => {
-            dispatch(actions.getTodoElementProcess(true));
+            dispatch(actions.updateTodoProcess(true));
 
-            if (isNew) {
+            if (!data.id) {
                 ApiHelper.createTodo({
                     title: data.title,
                     description: data.description
                 }).then(res => {
-                    console.log(res);
                     dispatch(actions.getAllTodos());
                 }).catch(err => {
-                    console.log('fail');
-                    // dispatch(actions.loginFail(err.response.data.message));
+                    dispatch(actions.updateTodoFail('Adding TODO failed.'));
                 });
             } else {
                 ApiHelper.updateTodo(data.id, {
                     title: data.title,
                     description: data.description
                 }).then(res => {
-                    console.log(res);
                     dispatch(actions.getAllTodos());
                 }).catch(err => {
-                    console.log('fail');
-                    // dispatch(actions.loginFail(err.response.data.message));
+                    dispatch(actions.updateTodoFail('Updating TODO failed.'));
                 });
             }
         };
+    },
+
+    updateTodoProcess: (isLoading) => {
+        return {
+            type: ACTION_TYPES.SAVE_TODO_PROCESS,
+            payload: {
+                errorText: '',
+                isLoadingTodoWindow: isLoading
+            }
+        }
+    },
+
+    updateTodoFail: (errorText) => {
+        return {
+            type: ACTION_TYPES.SAVE_TODO_FAIL,
+            payload: {
+                isLoadingTodoWindow: false,
+                errorText: errorText
+            }
+        }
     },
 
     removeTodo: (todoId) => {

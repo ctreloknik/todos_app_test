@@ -11,13 +11,24 @@ class HomePage extends React.Component {
     this.props.getUserInfo();
   }
 
-  render = () => {
-    return this.props.isLoading ? <LoadingElement/> : (
-      this.props.name ? (
+  renderUserInfo() {
+    return this.props.name ? (
       <div>
         Welcome, {this.props.name}
       </div>
-      ) : null
+    ) : null
+  }
+
+  renderError() {
+    return this.props.errorText;
+  }
+
+  render = () => {
+    return this.props.isLoading ? <LoadingElement /> : (
+      <>
+        {this.renderError()}
+        {this.renderUserInfo()}
+      </>
     );
   }
 }
@@ -25,7 +36,8 @@ class HomePage extends React.Component {
 const mapStateToProps = (state) => {
   return {
     isLoading: state.home.isLoading,
-    name: state.home.name
+    name: state.home.name,
+    errorText: state.home.errorText
   };
 };
 

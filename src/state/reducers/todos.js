@@ -69,15 +69,24 @@ export default function todosReducer(state = initialInitState, action) {
                 }
             }
         }
-        case ACTION_TYPES.SAVE_TODO_SUCCESS: {
+        // case ACTION_TYPES.SAVE_TODO_SUCCESS: {
+        //     return {
+        //         elementsList: action.payload.todoElement,
+        //         isLoadingTodoWindow: action.payload.isLoadingTodoWindow
+        //     };
+        // }
+        case ACTION_TYPES.SAVE_TODO_FAIL: {
             return {
-                elementsList: action.payload.todoElement,
-                isLoading: action.payload.isLoading
+                ...state,
+                saveErrorText: action.payload.errorText,
+                isLoadingTodoWindow: action.payload.isLoadingTodoWindow
             };
         }
         case ACTION_TYPES.SAVE_TODO_PROCESS: {
             return {
-                isLoading: action.payload.isLoading
+                ...state,
+                saveErrorText: action.payload.errorText,
+                isLoadingTodoWindow: action.payload.isLoadingTodoWindow
             };
         }
         default: return state;
