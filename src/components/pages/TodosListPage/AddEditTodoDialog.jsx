@@ -1,7 +1,7 @@
 import React from 'react';
 import './AddEditTodoDialog.scss'
 
-import { actions } from "../../../state/actions";
+import { actions } from "state/actions";
 import { connect } from "react-redux";
 
 class AddEditTodoDialog extends React.Component {

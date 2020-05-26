@@ -1,7 +1,7 @@
 import React from 'react';
-import App from '../../App';
+import App from 'App';
 
-import { loginOperations } from "../../state/ducks/login/index";
+import { loginOperations } from "state/ducks/login/index";
 import { connect } from "react-redux";
 
 class LoadingPage extends React.Component {
@@ -29,7 +29,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        checkAutentification: (login) => {
+        checkAutentification: () => {
             dispatch(loginOperations.checkAutentification());
         }
     }

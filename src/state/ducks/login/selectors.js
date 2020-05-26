@@ -7,7 +7,7 @@ export const getLoginInfo = (state) => {
   }
 };
 
-export const getLoginPasswordSelector = createSelector(
+export const getLoginPasswordFilledSelector = createSelector(
   [getLoginInfo], (item) => {
     return !!(item.login && item.password)
   }

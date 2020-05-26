@@ -1,9 +1,9 @@
 import * as types from "./types";
-import ApiHelper from "../../../ApiHelper";
+import ApiHelper from "ApiHelper";
 import {
     onSuccessfullLogin,
     onSuccessfullLogout
-} from "../../../Utils";
+} from "Utils";
 
 export const checkAutentification = () => {
     return (dispatch) => {
@@ -11,18 +11,18 @@ export const checkAutentification = () => {
 
         ApiHelper.getInfoAboutMe().then(res => {
             onSuccessfullLogin({ ...res.data });
-            dispatch(checkAutentificationProcess(true, true));
+            dispatch(checkAutentificationProcess({isAppLoaded: true, isSuccess: true}));
         }).catch(err => {
-            dispatch(checkAutentificationProcess(true, false));
+            dispatch(checkAutentificationProcess({isAppLoaded: true, isSuccess: false}));
         });
     }
 };
 
-export const checkAutentificationProcess = (isAppLoaded, status) => {
+export const checkAutentificationProcess = (isAppLoaded, isSuccess) => {
     return {
         type: types.CHECK_AUTENTIFICATION_PROCESS,
         isAppLoaded: isAppLoaded,
-        status: status
+        isSuccess: isSuccess
     }
 };
 
@@ -49,7 +49,7 @@ export const loadingOnLogin = () => {
     };
 };
 
-export const loginAction = (data, callback) => {
+export const loginAction = (data) => {
     return (dispatch) => {
         dispatch(loadingOnLogin());
 
@@ -62,7 +62,7 @@ export const loginAction = (data, callback) => {
             onSuccessfullLogin({
                 ...res.data,
                 login: data.login
-            }, callback);
+            });
         }).catch(err => {
             console.log('fail');
             dispatch(loginFail(err.errorText));

@@ -1,6 +1,8 @@
 import {
-    getAllUsers, getAllUsersSuccess,
-    getAllUsersFail, getAllUsersLoadingProcess
+    getAllUsers,
+    getAllUsersSuccess,
+    getAllUsersFail,
+    getAllUsersLoadingProcess
 } from "./actions";
 
 export {

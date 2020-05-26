@@ -1,13 +1,13 @@
 import React from 'react';
-import LoadingElement from '../../common/LoadingElement';
+import LoadingElement from 'components/common/LoadingElement';
 import AddEditTodoDialog from './AddEditTodoDialog';
 import './TodosListPage.scss';
-import { actions } from "../../../state/actions";
+import { actions } from "state/actions";
 import { connect } from "react-redux";
-import { getTodosSelector } from "../../../state/ducks/todos/selectors";
+import { getTodosSelector } from "state/ducks/todos/selectors";
 
 
-import { SecurityCfgCheck } from "../../../Utils";
+import { SecurityCfgCheck } from "Utils";
 
 class TodosListPage extends React.Component {
   componentDidMount() {

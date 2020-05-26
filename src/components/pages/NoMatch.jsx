@@ -4,7 +4,7 @@ import {
     Redirect
 } from 'react-router-dom';
 
-import { isAuthenticated } from '../../Utils';
+import { isAuthenticated } from 'Utils';
 
 function NoMatch({ children, ...rest }) {
     return (

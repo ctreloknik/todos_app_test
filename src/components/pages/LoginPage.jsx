@@ -5,10 +5,10 @@ import {
     Redirect
 } from 'react-router-dom';
 
-import { loginOperations } from "../../state/ducks/login/index";
+import { loginOperations } from "state/ducks/login/index";
 import { connect } from "react-redux";
-import { getLoginPasswordSelector } from "../../state/ducks/login/selectors";
-import { isAuthenticated } from '../../Utils';
+import { getLoginPasswordFilledSelector } from "state/ducks/login/selectors";
+import { isAuthenticated } from 'Utils';
 
 import './LoginPage.scss';
 
@@ -34,7 +34,7 @@ class LoginPage extends React.Component {
         const data = {};
         data.login = this.props.login;
         data.password = this.props.password;
-        this.props.loginAction(data, callback);
+        this.props.loginAction(data);
     }
 
     render = () => {
@@ -110,10 +110,10 @@ function LoginFormSubmit({ children, ...rest }) {
 
 const mapStateToProps = (state) => {
     return {
-        login: state.login.login ? state.login.login : '',
-        password: state.login.password ? state.login.password : '',
+        login: state.login.login || '',
+        password: state.login.password || '',
         isLoading: state.login.isLoading,
-        isValid: getLoginPasswordSelector(state),
+        isValid: getLoginPasswordFilledSelector(state),
         errorText: state.login.errorText || ''
     };
 };
@@ -127,8 +127,8 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(loginOperations.passwordChange(pass));
         },
 
-        loginAction: (data, callback) => {
-            dispatch(loginOperations.loginAction(data, callback));
+        loginAction: (data) => {
+            dispatch(loginOperations.loginAction(data));
         }
     }
 };
