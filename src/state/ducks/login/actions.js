@@ -57,12 +57,11 @@ export const loginAction = (data) => {
             login: data.login,
             password: data.password
         }).then(res => {
-            // console.log(res);
-            dispatch(loginSuccess(res.data));
             onSuccessfullLogin({
                 ...res.data,
                 login: data.login
             });
+            dispatch(loginSuccess(res.data));
         }).catch(err => {
             console.log('fail');
             dispatch(loginFail(err.errorText));

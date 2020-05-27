@@ -1,7 +1,7 @@
 import React from 'react';
 import './AddEditTodoDialog.scss'
 
-import { actions } from "state/actions";
+import { todosOperations } from "state/ducks/todos/index";
 import { connect } from "react-redux";
 
 class AddEditTodoDialog extends React.Component {
@@ -67,13 +67,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onTitleChange: (value) => {
-            dispatch(actions.onTitleChange(value));
+            dispatch(todosOperations.onTitleChange(value));
         },
         onDescriptionChange: (value) => {
-            dispatch(actions.onDescriptionChange(value));
+            dispatch(todosOperations.onDescriptionChange(value));
         },
         updateTodo: (data, isNew) => {
-            dispatch(actions.updateTodo(data, isNew));
+            dispatch(todosOperations.updateTodo(data, isNew));
         }
     }
 };

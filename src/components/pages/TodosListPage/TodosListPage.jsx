@@ -2,9 +2,8 @@ import React from 'react';
 import LoadingElement from 'components/common/LoadingElement';
 import AddEditTodoDialog from './AddEditTodoDialog';
 import './TodosListPage.scss';
-import { actions } from "state/actions";
 import { connect } from "react-redux";
-import { getTodosSelector } from "state/ducks/todos/selectors";
+import { todosSelectors, todosOperations } from "state/ducks/todos/index";
 
 
 import { SecurityCfgCheck } from "Utils";
@@ -88,7 +87,7 @@ class TodosListPage extends React.Component {
 const mapStateToProps = (state) => {
   return {
     selectedRecord: state.todos.todoElement,
-    elementsList: getTodosSelector(state) || [],
+    elementsList: todosSelectors.getTodosSelector(state) || [],
     isLoadingTodosFailed: state.todos.isLoadingTodosFailed,
     isLoading: state.todos.isLoading,
     errorText: state.todos.errorText
@@ -98,19 +97,19 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getAllTodos: () => {
-      dispatch(actions.getAllTodos());
+      dispatch(todosOperations.getAllTodos());
     },
     createNewTodoElement: () => {
-      dispatch(actions.createNewTodoElement());
+      dispatch(todosOperations.createNewTodoElement());
     },
     getTodoById: (todoId) => {
-      dispatch(actions.getTodoById(todoId));
+      dispatch(todosOperations.getTodoById(todoId));
     },
     cancelEditTodo: () => {
-      dispatch(actions.cancelEditTodo());
+      dispatch(todosOperations.cancelEditTodo());
     },
     removeTodo: (todoId) => {
-      dispatch(actions.removeTodo(todoId));
+      dispatch(todosOperations.removeTodo(todoId));
     }
   }
 };

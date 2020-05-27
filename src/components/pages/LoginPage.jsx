@@ -5,10 +5,9 @@ import {
     Redirect
 } from 'react-router-dom';
 
-import { loginOperations } from "state/ducks/login/index";
+import { loginOperations, loginSelectors } from "state/ducks/login/index";
 import { connect } from "react-redux";
-import { getLoginPasswordFilledSelector } from "state/ducks/login/selectors";
-import { isAuthenticated } from 'Utils';
+import { isAuthenticated } from "Utils";
 
 import './LoginPage.scss';
 
@@ -113,7 +112,7 @@ const mapStateToProps = (state) => {
         login: state.login.login || '',
         password: state.login.password || '',
         isLoading: state.login.isLoading,
-        isValid: getLoginPasswordFilledSelector(state),
+        isValid: loginSelectors.getLoginPasswordFilledSelector(state),
         errorText: state.login.errorText || ''
     };
 };
