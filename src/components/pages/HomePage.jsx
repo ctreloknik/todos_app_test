@@ -1,7 +1,7 @@
 import React from 'react';
 import LoadingElement from '../common/LoadingElement';
 
-import { actions } from "../../state/actions";
+import { actions } from "state/actions";
 import { connect } from "react-redux";
 
 class HomePage extends React.Component {

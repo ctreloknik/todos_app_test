@@ -1,4 +1,4 @@
-import { ACTION_TYPES } from '../ActionTypesConst';
+import { ACTION_TYPES } from '../../ActionTypesConst';
 
 export const initialInitState = {
     todoElement: {},
@@ -69,12 +69,6 @@ export default function todosReducer(state = initialInitState, action) {
                 }
             }
         }
-        // case ACTION_TYPES.SAVE_TODO_SUCCESS: {
-        //     return {
-        //         elementsList: action.payload.todoElement,
-        //         isLoadingTodoWindow: action.payload.isLoadingTodoWindow
-        //     };
-        // }
         case ACTION_TYPES.SAVE_TODO_FAIL: {
             return {
                 ...state,

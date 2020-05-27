@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../header/Header';
 
-import { SecurityCfgCheck, redirectToPage } from '../../Utils';
+import { SecurityCfgCheck, redirectToPage } from 'Utils';
 
 function MainView({ children, ...rest }) {
     if (!SecurityCfgCheck.isPageEnabled(rest.pageName)) {

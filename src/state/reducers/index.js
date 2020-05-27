@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import homeReducer from './home';
-import loginReducer from './login';
-import todosReducer from './todos';
-import usersReducer from './users'
+import loginReducer from '../ducks/login/index';
+import usersReducer from '../ducks/users/index'
+import homeReducer from '../ducks/home/index';
+import todosReducer from '../ducks/todos/index';
 
 const rootReducer = combineReducers({
   home: homeReducer,
