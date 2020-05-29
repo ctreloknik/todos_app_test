@@ -2,7 +2,7 @@ import { MENU_ITEMS } from '../../Utils';
 
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { actions } from "../../state/actions";
+import { loginOperations } from "state/ducks/login/index";
 import { connect } from "react-redux";
 
 import './Header.scss';
@@ -90,7 +90,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         logout: (callback) => {
-            dispatch(actions.logout(callback));
+            dispatch(loginOperations.logout(callback));
         }
     }
 };

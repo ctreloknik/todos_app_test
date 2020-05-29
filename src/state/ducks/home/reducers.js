@@ -1,4 +1,4 @@
-import { ACTION_TYPES } from '../../ActionTypesConst';
+import * as types from "./types";
 import createReducer from "../../utils/createReducer";
 
 export const initialState = {
@@ -9,7 +9,7 @@ export const initialState = {
 };
 
 const homeReducer = createReducer(initialState)({
-    [ACTION_TYPES.GET_ABOUT_ME_SUCCESS]: (state, action) => {
+    [types.GET_ABOUT_ME_SUCCESS]: (state, action) => {
         return {
             name: action.payload.name,
             role: action.payload.role,
@@ -17,13 +17,13 @@ const homeReducer = createReducer(initialState)({
             errortext: ''
         };
     },
-    [ACTION_TYPES.GET_ABOUT_ME_FAIL]: (state, action) => {
+    [types.GET_ABOUT_ME_FAIL]: (state, action) => {
         return {
             isLoading: action.payload.isLoading,
             errorText: action.payload.errorText
         };
     },
-    [ACTION_TYPES.GET_ABOUT_ME_PROCESS]: (state, action) => {
+    [types.GET_ABOUT_ME_PROCESS]: (state, action) => {
         return {
             isLoading: action.payload.isLoading
         };

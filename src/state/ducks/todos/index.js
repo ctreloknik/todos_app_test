@@ -1,9 +1,11 @@
 import todosReducer from "./reducers";
 
-// import * as loginOperations from "./operations";
+import * as todosOperations from "./operations";
+import * as todosSelectors from "./selectors";
 
-// export {
-//     loginOperations,
-// };
+export {
+    todosSelectors,
+    todosOperations
+};
 
 export default todosReducer;

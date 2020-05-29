@@ -1,9 +1,9 @@
 import homeReducer from "./reducers";
 
-// import * as loginOperations from "./operations";
+import * as homeOperations from "./operations";
 
-// export {
-//     loginOperations,
-// };
+export {
+    homeOperations,
+};
 
 export default homeReducer;

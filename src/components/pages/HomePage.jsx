@@ -1,7 +1,7 @@
 import React from 'react';
 import LoadingElement from '../common/LoadingElement';
 
-import { actions } from "state/actions";
+import { homeOperations } from "state/ducks/home/index";
 import { connect } from "react-redux";
 
 class HomePage extends React.Component {
@@ -44,7 +44,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getUserInfo: () => {
-      dispatch(actions.getUserInfo());
+      dispatch(homeOperations.getUserInfo());
     }
   }
 };
