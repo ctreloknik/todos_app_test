@@ -6,7 +6,7 @@ export const getAllUsers = () => {
         dispatch(getAllUsersLoadingProcess(true));
 
         ApiHelper.getAllUsers().then(res => {
-            dispatch(getAllUsersSuccess({ elementsList: res.data, isLoading: false }));
+            dispatch(getAllUsersSuccess({ usersList: res.data, isLoading: false }));
         }).catch(err => {
             dispatch(getAllUsersFail());
         });
@@ -32,8 +32,10 @@ export const getAllUsersSuccess = (data) => {
 export const getAllUsersFail = (data) => {
     return {
         type: types.GET_USERS_LIST_FAIL,
-        isLoadingUsersFailed: true,
-        isLoading: false,
-        errorText: 'Error loading data. Please try again.'
+        payload: {
+            isLoadingUsersFailed: true,
+            isLoading: false,
+            errorText: 'Error loading data. Please try again.'
+        }
     };
 };

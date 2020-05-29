@@ -1,8 +1,7 @@
 import * as types from "./types";
 import createReducer from "../../utils/createReducer";
-import { initialState } from "../home/reducers";
 
-export const initialInitState = {
+export const initialState = {
     todoElement: {},
     elementsList: [],
     isLoading: false,
@@ -36,20 +35,21 @@ const todosReducer = createReducer(initialState)({
             ...state,
             errorText: '',
             todoElement: action.payload.todoElement,
-            isLoadingTodoWindow: action.payload.isLoading
+            isLoading: action.payload.isLoading
         };
     },
     [types.GET_TODO_FAIL]: (state, action) => {
         return {
             ...state,
             errorText: action.errorText,
-            isLoadingTodoWindow: action.isLoading
+            isLoading: action.isLoading
         };
     },
     [types.GET_TODO_PROCESS]: (state, action) => {
         return {
             ...state,
-            isLoadingTodoWindow: action.payload.isLoading
+            isLoading: action.payload.isLoading
+            // isLoadingTodoWindow: action.payload.isLoading
         };
     },
     [types.TODO_TITLE_CHANGE]: (state, action) => {
@@ -83,7 +83,20 @@ const todosReducer = createReducer(initialState)({
             saveErrorText: action.payload.errorText,
             isLoadingTodoWindow: action.payload.isLoadingTodoWindow
         };
-    }
+    },
+    [types.REMOVE_TODO_PROCESS]: (state, action) => {
+        return {
+            ...state,
+            isLoading: action.payload.isLoading
+        };
+    },
+    [types.REMOVE_TODO_FAIL]: (state, action) => {
+        return {
+            ...state,
+            errorText: action.payload.errorText,
+            isLoading: action.payload.isLoading
+        };
+    },
 })
 
 export default todosReducer;

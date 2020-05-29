@@ -45,8 +45,12 @@ class AddEditTodoDialog extends React.Component {
                             onChange={this.onDescriptionChange} />
                     </div>
                     <div className="modal-footer">
-                        <button onClick={this.props.onCancel} className="modal-footer-button">Cancel</button>
-                        <button onClick={this.onSave} className="modal-footer-button">Save</button>
+                        <button disabled={this.props.isLoadingTodoWindow}
+                            onClick={this.props.onCancel}
+                            className="modal-footer-button">Cancel</button>
+                        <button disabled={this.props.isLoadingTodoWindow}
+                            onClick={this.onSave}
+                            className="modal-footer-button">Save</button>
                         {this.props.saveErrorText}
                     </div>
                 </div>
