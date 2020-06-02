@@ -54,33 +54,39 @@ class TodosListPage extends React.Component {
   }
 
   render = () => {
-    return this.props.isLoading ? <LoadingElement /> :
-      (
-        <>
-          <button onClick={() => this.onEditButtonClick(null)}>Add note</button>
-          <button onClick={() => this.props.getAllTodos()}>Reload</button>
-          {this.props.errorText || null}
-          {!this.props.isLoadingTodosFailed ? (
-            <table className='todos-list-table'>
-              <thead>
-                <tr>
-                  <td>Name</td>
-                  <td>Description</td>
-                  <td>Created by</td>
-                  <td></td>
-                </tr>
-              </thead>
-              <tbody>
-                {this.renderTodos()}
-              </tbody>
-            </table>
-          ) : null}
-          {this.props.selectedRecord
-            && <AddEditTodoDialog
-              onCancel={this.onModalClose}
-              todoId={this.props.selectedRecord.id} />}
-        </>
-      );
+    const cssTable = this.props.isLoading ?
+      'todos-list-table table-disabled' : 'todos-list-table';
+
+    return (
+      // this.props.isLoading ? <LoadingElement /> :
+      // (
+      <>
+        <button disabled={this.props.isLoading}
+          onClick={() => this.onEditButtonClick(null)}>Add note</button>
+        <button disabled={this.props.isLoading}
+          onClick={() => this.props.getAllTodos()}>Reload</button>
+        {this.props.errorText || null}
+        {!this.props.isLoadingTodosFailed ? (
+          <table className={cssTable}>
+            <thead>
+              <tr>
+                <td>Name</td>
+                <td>Description</td>
+                <td>Created by</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+              {this.renderTodos()}
+            </tbody>
+          </table>
+        ) : null}
+        {this.props.selectedRecord
+          && <AddEditTodoDialog
+            onCancel={this.onModalClose}
+            todoId={this.props.selectedRecord.id} />}
+      </>
+    );
   }
 }
 

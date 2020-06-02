@@ -161,12 +161,23 @@ export const updateTodoFail = (errorText) => {
 
 export const removeTodo = (todoId) => {
     return (dispatch) => {
+        dispatch(removeTodoProcess(true))
+
         ApiHelper.deleteTodo(todoId).then(data => {
             dispatch(getAllTodos());
         }).catch(err => {
             dispatch(removeTodoFail());
         })
     }
+};
+
+export const removeTodoProcess = (isLoading) => {
+    return {
+        type: types.REMOVE_TODO_PROCESS,
+        payload: {
+            isLoading: isLoading
+        }
+    };
 };
 
 export const removeTodoFail = () => {

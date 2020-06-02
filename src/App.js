@@ -11,6 +11,7 @@ import NoMatch from './components/pages/NoMatch';
 import LoginPage from './components/pages/LoginPage';
 import MainView from './components/pages/MainView';
 import HomePage from './components/pages/HomePage';
+import UsersPage from './components/pages/UsersPage';
 import TodosListPage from './components/pages/TodosListPage/TodosListPage';
 
 import { isAuthenticated } from './Utils';
@@ -30,7 +31,7 @@ class App extends React.Component {
               <HomePage />
             </PrivateRoute>
             <PrivateRoute path="/users" pageName='USERS'>
-              users
+              <UsersPage/>
             </PrivateRoute>
             <PrivateRoute path="/todo" pageName='TODO'>
               <TodosListPage />

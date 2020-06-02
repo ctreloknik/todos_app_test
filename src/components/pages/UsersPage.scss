@@ -1,9 +1,10 @@
-.todos-list-table {
+.users-list-table {
     margin: 10px 0 0 10px;
     border-collapse: collapse;
     border: 2px solid rgb(37, 126, 177);
 
     tbody {
+        width: 100%;
         td {
             padding: 5px;
             border: 2px solid rgb(37, 126, 177);
